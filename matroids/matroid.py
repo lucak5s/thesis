@@ -21,5 +21,10 @@ class Matroid:
         cocircuit = cocircuit.union(frozenset([e]))
     return cocircuit
   
-  def contract(self, X: frozenset) -> frozenset:
+  def contract(self, X: frozenset):
+    self.groundset = frozenset(element for element in self.groundset if not element in X)
     self.contracted_elements = self.contracted_elements.union(X)
+
+  def delete(self, X: frozenset):
+    self.groundset = frozenset(element for element in self.groundset if not element in X)
+    self.independent_sets = frozenset(set for set in self.independent_sets if not set.intersection(X) == frozenset())
