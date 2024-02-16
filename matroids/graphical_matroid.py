@@ -1,4 +1,6 @@
-class GraphicalMatroid:
+from matroid import Matroid
+
+class GraphicalMatroid(Matroid):
   def __init__(self, vertices: frozenset, edges: frozenset):
     self.edges = edges
     self.graph_components = UnionFind(vertices)
