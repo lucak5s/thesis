@@ -20,7 +20,7 @@ def unit_step_auction (matroid: Matroid, bidders: List[Bidder]):
         bidder.award_element(chosen_element, price)
         base = base.union(frozenset([chosen_element]))
         matroid.contract(chosen_element)
-        if len(base) >= full_rank: return base
+        if len(base) == full_rank: return base
 
 def get_critical_elements(bidders: List[Bidder], price: int):
   critical_elements = frozenset()
