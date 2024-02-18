@@ -14,6 +14,10 @@ class Bidder:
     for element, valuation in self.valuations.items():
       if valuation == price:
         critical_elements = critical_elements.union(frozenset([element]))
+
+    for element in critical_elements:
+      self.valuations.pop(element)
+      
     return critical_elements
   
   def choose_element_to_buy(self, X: frozenset):
@@ -27,4 +31,7 @@ class Bidder:
   
   def award_element(self, element, price: int):
     print(f'awarded element {element} to bidder {self.name} at price ${price}')
+    self.valuations.pop(element)
+
+  def dropout(self, element):
     self.valuations.pop(element)
