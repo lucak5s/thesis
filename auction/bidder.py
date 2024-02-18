@@ -9,10 +9,6 @@ class Bidder:
       elements = elements.union(frozenset([element]))
     return elements
   
-  def get_next_lowest_valuation(self, price: int):
-    min_element = min(self.valuations, key=self.valuations.get)
-    return self.valuations[min_element]
-  
   def get_critical_elements(self, price: int) -> frozenset:
     critical_elements = frozenset()
     for element, valuation in self.valuations.items():
