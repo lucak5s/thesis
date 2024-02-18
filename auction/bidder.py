@@ -2,13 +2,16 @@ class Bidder:
   def __init__(self, valuations, name):
     self.valuations = valuations
     self.name = name
-    self.awarded_elements = {}
 
   def get_all_elements(self) -> frozenset:
     elements = frozenset()
     for element in self.valuations:
       elements = elements.union(frozenset([element]))
     return elements
+  
+  def get_next_lowest_valuation(self, price: int):
+    min_element = min(self.valuations, key=self.valuations.get)
+    return self.valuations[min_element]
   
   def get_critical_elements(self, price: int) -> frozenset:
     critical_elements = frozenset()
@@ -26,4 +29,6 @@ class Bidder:
         max_element = element
     return max_element
   
-  def award_element(self, element):
+  def award_element(self, element, price: int):
+    print(f'awarded element {element} to bidder {self.name} at price ${price}')
+    self.valuations.pop(element)

@@ -1,25 +1,21 @@
-from matroids.matroid import BasesMatroid
-from auctions.bidder import Bidder
-from auctions.unit_step_auction import unit_step_auction
+from matroids.graphic_matroid import GraphicMatroid
+from auction.bidder import Bidder
+from auction.unit_step_auction import unit_step_auction
 
-groundset = frozenset(['a:5', 'b:2', 'b:3', 'a:4', 'c:1'])
+vertices = frozenset({1, 2, 3, 4})
+edges = frozenset({
+  frozenset({1, 2}),
+  frozenset({1, 4}),
+  frozenset({2, 4}),
+  frozenset({3, 4}),
+  frozenset({2, 3}),
+})
 
-bases = frozenset([
-  frozenset(['a:5', 'c:1', 'a:4']),
-  frozenset(['a:5', 'c:1', 'b:3']),
-  frozenset(['a:5', 'b:3', 'a:4']),
-  frozenset(['a:5', 'b:2', 'a:4']),
-  frozenset(['a:5', 'b:2', 'b:3']),
-  frozenset(['b:2', 'a:4', 'b:3']),
-  frozenset(['b:2', 'c:1', 'b:3']),
-  frozenset(['b:2', 'c:1', 'a:4']),
-])
+matroid = GraphicMatroid(vertices, edges)
 
-matroid = BasesMatroid(groundset, bases)
-
-bidder_a = Bidder({'a:5': 5, 'a:4': 4}, 'a')
-bidder_b = Bidder({'b:2': 2, 'b:3': 3}, 'b')
-bidder_c = Bidder({'c:1': 1}, 'c')
+bidder_a = Bidder({frozenset({1, 2}): 5, frozenset({3, 4}): 4}, 'a')
+bidder_b = Bidder({frozenset({1, 4}): 2, frozenset({2, 3}): 3}, 'b')
+bidder_c = Bidder({frozenset({2, 4}): 1}, 'c')
 
 base = unit_step_auction(matroid, [bidder_a, bidder_b, bidder_c])
 print(base)

@@ -1,5 +1,3 @@
-from itertools import combinations
-
 class Matroid:
   def __init__(self, groundset: frozenset, independent_sets: frozenset[frozenset]):
     self.groundset = groundset
@@ -10,9 +8,9 @@ class Matroid:
     Y = X.union(self.contracted_elements) 
     return Y in self.independent_sets
   
-  def rank(self, X: frozenset) -> int:
+  def full_rank(self) -> int:
     S = frozenset()
-    for e in X:
+    for e in self.groundset:
       Y = S.union(frozenset([e]))
       if self.independence_oracle(Y):
         S = Y
@@ -38,16 +36,3 @@ class Matroid:
   def delete(self, item):
     self.groundset = frozenset(element for element in self.groundset if element != item)
     self.independent_sets = frozenset(set for set in self.independent_sets if not item in set)
-
-
-class BasesMatroid(Matroid):
-  def __init__(self, groundset: frozenset, bases: frozenset[frozenset]):
-    independent_sets = self.independent_sets_from_bases(bases)
-    super().__init__(groundset, independent_sets)
-
-  def independent_sets_from_bases(self, bases: frozenset[frozenset]):
-    independent_sets = frozenset()
-    for base in bases:
-      subsets = frozenset(frozenset(subset) for r in range(len(base) + 1) for subset in combinations(base, r))
-      independent_sets = independent_sets.union(subsets)
-    return independent_sets
