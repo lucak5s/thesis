@@ -1,31 +1,28 @@
 from matroids.matroid import Matroid
 
 class SchedulingMatroid(Matroid):
-  def __init__(self, job_with_deadlines: dict, job_length: int):
+  def __init__(self, job_with_deadlines: dict):
     self.deadlines = job_with_deadlines
     self.dual_deadlines = get_dual_deadlines(job_with_deadlines)
-    self.job_length = job_length
     
   def full_rank(self) -> int:
-    sorted_jobs = sorted(self.deadlines, key= lambda job: self.deadlines[job])
-    rank = 0
-    current_time = 0
+    sorted_jobs = sorted(self.deadlines, key=self.deadlines.get)
+    scheduled_jobs = 0
     for job in sorted_jobs:
-      job_start = self.deadlines[job] - self.job_length
-      if job_start >= current_time:
-        rank += 1
-        current_time = job_start + self.job_length
-    return rank
+        job_start = self.deadlines[job] - 1
+        if job_start >= scheduled_jobs:
+            scheduled_jobs += 1
+    return scheduled_jobs
 
   def unique_cocircuit(self, X: frozenset) -> frozenset:
     sorted_jobs = sorted(X, key= lambda job: self.dual_deadlines[job])
     cocircuit = frozenset()
-    current_time = 0
+    scheduled_jobs = 0
     for job in sorted_jobs:
-      job_start = self.dual_deadlines[job] - self.job_length
+      job_start = self.dual_deadlines[job] - 1
       cocircuit = cocircuit.union(frozenset({job}))
-      if job_start < current_time: return cocircuit
-      current_time = job_start + self.job_length
+      if job_start < scheduled_jobs: return cocircuit
+      scheduled_jobs += 1
     return frozenset()
   
   def contract(self, element):
