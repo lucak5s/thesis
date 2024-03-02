@@ -9,6 +9,7 @@ def unit_step_auction (matroid: Matroid, bidders: List[Bidder]):
 
   while True:
     price += 1
+    print(price)
     critical_elements = get_critical_elements(bidders, price)
     for critical_element in critical_elements:
       print(f'delete element {critical_element}')
