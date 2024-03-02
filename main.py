@@ -14,19 +14,20 @@ edges = frozenset({
   ('e', 'f')
 })
 sources = frozenset({
-  'a', 'b'
+  'a', 'b', 'c', 'e'
 })
 sinks = frozenset({
-  'g', 'c', 'd'
+  'g', 'c', 'd', 'e'
 })
 
 matroid = Gammoid(vertices, edges, sources, sinks)
 
-bidder_a = Bidder({'d': 5}, 'a')
-bidder_b = Bidder({'g': 1}, 'b')
+bidder_a = Bidder({'d': 12}, 'a')
+bidder_b = Bidder({'g': 25}, 'b')
 bidder_c = Bidder({'c': 24}, 'c')
+bidder_d = Bidder({'e': 11}, 'd')
 
-bidders = [bidder_a, bidder_b, bidder_c]
+bidders = [bidder_a, bidder_b, bidder_c, bidder_d]
 print(matroid.full_rank())
 base = unit_step_auction(matroid, bidders)
 

@@ -39,11 +39,20 @@ class Gammoid(Matroid):
     return cocircuit
   
   def contract(self, element):
-    path = self.flow_network.find_augmenting_path(element)
+    for e in self.sinks.difference(frozenset({element})):
+      self.flow_network.set_sink_weight(e, 0)
+
+    path = self.flow_network.find_augmenting_path()
     self.flow_network.augment_flow(path)
+
+    for e in self.sinks.difference(frozenset({element})):
+      self.flow_network.set_sink_weight(e, 1)
+
+    self.sinks = frozenset(sink for sink in self.sinks if sink != element)
 
   def delete(self, element):
     self.flow_network.set_sink_weight(element, 0)
+    self.sinks = frozenset(sink for sink in self.sinks if sink != element)
 
 
 class GammoidFlowNetwork():
