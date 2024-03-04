@@ -1,36 +1,48 @@
-from matroids.graphic_matroid import GraphicMatroid
+from matroids.linear_matroid import LinearMatroid
 from auction.bidder import Bidder
 from auction.unit_step_auction import unit_step_auction
 
-vertices = frozenset({'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k'})
-edges = frozenset({
-  frozenset({'a', 'd'}), 
-  frozenset({'a', 'e'}),
-  frozenset({'a', 'b'}),
-  frozenset({'b', 'f'}),
-  frozenset({'b', 'c'}),
-  frozenset({'c', 'g'}),
-  frozenset({'c', 'k'}),
-  frozenset({'d', 'h'}),
-  frozenset({'d', 'e'}),
-  frozenset({'e', 'h'}),
-  frozenset({'e', 'f'}),
-  frozenset({'f', 'i'}),
-  frozenset({'f', 'g'}),
-  frozenset({'g', 'j'}),
-  frozenset({'g', 'k'}),
-  frozenset({'k', 'j'}),
-  frozenset({'h', 'i'}),
-  frozenset({'i', 'j'}),               
-})
-matroid = GraphicMatroid(vertices, edges)
+# columns = [
+#   [1, 0, 0, 0, 0],
+#   [0, 1, 0, 0, 0],
+#   [0, 0, 1, 0, 0],
+#   [0, 0, 0, 1, 0],
+#   [0, 0, 0, 0, 1],
+#   [1, 1, 0, 0, 0],
+#   [0, 1, 1, 0, 0],
+#   [1, 1, 0, 1, 0],
+#   [0, 1, 1, 1, 1],
+# ]
 
-bidder_a = Bidder({frozenset({'a', 'd'}): 1, frozenset({'b', 'f'}): 5, frozenset({'c', 'k'}): 7, frozenset({'k', 'j'}): 12}, 'a')
-bidder_b = Bidder({frozenset({'d', 'h'}): 14, frozenset({'a', 'b'}): 4, frozenset({'f', 'g'}): 6}, 'b')
-bidder_c = Bidder({frozenset({'d', 'e'}): 3, frozenset({'e', 'f'}): 11, frozenset({'c', 'g'}): 8}, 'c')
-bidder_d = Bidder({frozenset({'h', 'i'}): 15, frozenset({'i', 'j'}): 16, frozenset({'g', 'k'}): 9, frozenset({'b', 'c'}): 10}, 'd')
-bidder_e = Bidder({frozenset({'a', 'e'}): 2, frozenset({'e', 'h'}): 18, frozenset({'f', 'i'}): 13, frozenset({'g', 'j'}): 17}, 'd')
-bidders = [bidder_a, bidder_b, bidder_c, bidder_d, bidder_e]
+# columns = [
+#   [1, 0],
+#   [1, 1],
+#   [1, 0],
+# ]
+
+columns = [
+  [1, 0, 0, 0],
+  [0, 1, 0, 0],
+  [0, 0, 1, 0],
+  [0, 0, 0, 1],
+  [0, 1, 1, -1],
+  [1, 0, 1, 1],
+  [1, 1, 0, 1],
+  [-1, 1, 1, 0]
+]
+
+matroid = LinearMatroid(columns)
+
+bidder_a = Bidder({0: 2}, 'a')
+bidder_b = Bidder({1: 6}, 'b')
+bidder_c = Bidder({2: 9}, 'c')
+bidder_d = Bidder({3: 1}, 'd')
+bidder_e = Bidder({4: 11}, 'e')
+bidder_f = Bidder({5: 5}, 'f')
+bidder_g = Bidder({6: 13}, 'g')
+bidder_h = Bidder({7: 3}, 'h')
+
+bidders = [bidder_a, bidder_b, bidder_c, bidder_d, bidder_e, bidder_f, bidder_g, bidder_h]
 
 base = unit_step_auction(matroid, bidders)
 print(base)
