@@ -1,48 +1,48 @@
-from matroids.linear_matroid import LinearMatroid
-from auction.bidder import Bidder
-from auction.unit_step_auction import unit_step_auction
+deadlines_1 = {
+  1: set({'g', 'h', 'i'}),
+  2: set({'e', 'f'}),
+  3: set({'c', 'd'}),
+  4: set({'a', 'b'})
+}
 
-# columns = [
-#   [1, 0, 0, 0, 0],
-#   [0, 1, 0, 0, 0],
-#   [0, 0, 1, 0, 0],
-#   [0, 0, 0, 1, 0],
-#   [0, 0, 0, 0, 1],
-#   [1, 1, 0, 0, 0],
-#   [0, 1, 1, 0, 0],
-#   [1, 1, 0, 1, 0],
-#   [0, 1, 1, 1, 1],
-# ]
+deadlines_2 = {
+  5: set({'g', 'h', 'i'}),
+  3: set({'e', 'f'}),
+  2: set({'c', 'd'}),
+  1: set({'a', 'b'})
+}
 
-# columns = [
-#   [1, 0],
-#   [1, 1],
-#   [1, 0],
-# ]
+deadlines_3 = {
+  1: set({'a'}),
+  3: set({'b', 'c', 'd', 'e'}),
+}
 
-columns = [
-  [1, 0, 0, 0],
-  [0, 1, 0, 0],
-  [0, 0, 1, 0],
-  [0, 0, 0, 1],
-  [0, 1, 1, -1],
-  [1, 0, 1, 1],
-  [1, 1, 0, 1],
-  [-1, 1, 1, 0]
-]
+deadlines_4 = {
+  2: set({'a', 'b', 'c', 'd', 'e'}),
+}
 
-matroid = LinearMatroid(columns)
 
-bidder_a = Bidder({0: 2}, 'a')
-bidder_b = Bidder({1: 6}, 'b')
-bidder_c = Bidder({2: 9}, 'c')
-bidder_d = Bidder({3: 1}, 'd')
-bidder_e = Bidder({4: 11}, 'e')
-bidder_f = Bidder({5: 5}, 'f')
-bidder_g = Bidder({6: 13}, 'g')
-bidder_h = Bidder({7: 3}, 'h')
+def dual_deadlines(deadlines):
+  sorted_deadlines = sorted(deadlines)
+  dual_deadlines = {}
+  previous_dual_deadline = 0
 
-bidders = [bidder_a, bidder_b, bidder_c, bidder_d, bidder_e, bidder_f, bidder_g, bidder_h]
+  i = len(sorted_deadlines) - 1
+  while i >= 0:
+    deadline = sorted_deadlines[i]
+    previous_deadline = sorted_deadlines[i-1] if i > 0 else 0
+    elements_with_deadline = deadlines[deadline]
 
-base = unit_step_auction(matroid, bidders)
-print(base)
+    dual_deadline = len(elements_with_deadline) - (deadline - previous_deadline) + previous_dual_deadline
+    previous_dual_deadline = dual_deadline
+    dual_deadlines[dual_deadline] = dual_deadlines[dual_deadline].union(elements_with_deadline) if dual_deadline in dual_deadlines else elements_with_deadline
+
+    i -= 1
+  
+  print(dual_deadlines)
+
+
+dual_deadlines(deadlines_1)
+dual_deadlines(deadlines_2)
+dual_deadlines(deadlines_3)
+dual_deadlines(deadlines_4)
