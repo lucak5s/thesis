@@ -3,9 +3,30 @@ from auction.bidder import Bidder
 from auction.unit_step_auction import unit_step_auction
 
 def test_unit_step_auction():
-  deadlines = { 'g': 5, 'h': 5, 'i': 5, 'f': 3, 'e': 3, 'c': 2, 'd': 2, 'a': 1, 'b': 1 }
+  deadlines_1 = {
+    1: set({'g', 'h', 'i'}),
+    2: set({'e', 'f'}),
+    3: set({'c', 'd'}),
+    4: set({'a', 'b'})
+  }
 
-  matroid = SchedulingMatroid(deadlines)
+  # deadlines_2 = {
+  #   5: set({'g', 'h', 'i'}),
+  #   3: set({'e', 'f'}),
+  #   2: set({'c', 'd'}),
+  #   1: set({'a', 'b'})
+  # }
+
+  # deadlines_3 = {
+  #   1: set({'a'}),
+  #   3: set({'b', 'c', 'd', 'e'}),
+  # }
+
+  # deadlines_4 = {
+  #   2: set({'a', 'b', 'c', 'd', 'e'}),
+  # }
+
+  matroid = SchedulingMatroid(deadlines_1)
 
   bidder_a = Bidder({'a': 2}, 'a')
   bidder_b = Bidder({'b': 1}, 'b')

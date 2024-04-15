@@ -43,7 +43,7 @@ class GraphUnionFind:
       self.parent_map[x] = self.find(self.parent_map[x])
     return self.parent_map[x]
   
-  # union with keeping tree balanced
+  # union by rank
   def union(self, x, y):
     root_x = self.find(x)
     root_y = self.find(y)

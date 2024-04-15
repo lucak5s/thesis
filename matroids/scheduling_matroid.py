@@ -3,7 +3,7 @@ from matroids.matroid import Matroid
 class SchedulingMatroid(Matroid):
   def __init__(self, job_with_deadlines: dict):
     self.deadlines = job_with_deadlines
-    self.dual_deadlines = get_dual_deadlines(job_with_deadlines)
+    self.dual_deadlines = dual_deadlines(job_with_deadlines)
     
   def full_rank(self) -> int:
     sorted_jobs = sorted(self.deadlines, key=self.deadlines.get)
@@ -40,26 +40,29 @@ class SchedulingMatroid(Matroid):
     self.dual_deadlines.pop(element)
 
 
-def get_dual_deadlines(deadlines: dict) -> dict:
-  sorted_jobs = sorted(deadlines, key= lambda job: deadlines[job], reverse=True)
-
-  curr_deadline = deadlines[sorted_jobs[0]]
-  jobs_with_curr_deadline = set(sorted_jobs[0])
-  offset = 0
+def dual_deadlines(deadlines):
+  sorted_deadlines = sorted(deadlines)
   dual_deadlines = {}
+  previous_dual_deadline = 0
 
-  for job in sorted_jobs:
-    if deadlines[job] != curr_deadline:
-      offset += len(jobs_with_curr_deadline) - (curr_deadline - deadlines[job])
-      for j in jobs_with_curr_deadline:
-        dual_deadlines[j] = offset
-      jobs_with_curr_deadline.clear()
-      curr_deadline = deadlines[job]
-    jobs_with_curr_deadline.add(job)
+  i = len(sorted_deadlines) - 1
+  while i >= 0:
+    deadline = sorted_deadlines[i]
+    previous_deadline = sorted_deadlines[i-1] if i > 0 else 0
+    elements_with_deadline = deadlines[deadline]
 
-  if jobs_with_curr_deadline:
-    offset += len(jobs_with_curr_deadline) - (curr_deadline)
-    for j in jobs_with_curr_deadline:
-      dual_deadlines[j] = offset
-  
+    dual_deadline = len(elements_with_deadline) - (deadline - previous_deadline) + previous_dual_deadline
+    previous_dual_deadline = dual_deadline
+    dual_deadlines[dual_deadline] = dual_deadlines[dual_deadline].union(elements_with_deadline) if dual_deadline in dual_deadlines else elements_with_deadline
+
+    i -= 1
+
   return dual_deadlines
+
+
+
+
+
+
+
+

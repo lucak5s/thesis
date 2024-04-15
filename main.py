@@ -38,6 +38,8 @@ def dual_deadlines(deadlines):
     dual_deadlines[dual_deadline] = dual_deadlines[dual_deadline].union(elements_with_deadline) if dual_deadline in dual_deadlines else elements_with_deadline
 
     i -= 1
+
+  return dual_deadlines
   
   print(dual_deadlines)
 
