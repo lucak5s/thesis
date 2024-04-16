@@ -1,6 +1,6 @@
 from matroids.partition_matroid import PartitionMatroid
 from auction.bidder import Bidder
-from auction.unit_step_auction import unit_step_auction
+from auction.auction import unit_step_auction
 
 def test_unit_step_auction():
   groundset = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9, 10})

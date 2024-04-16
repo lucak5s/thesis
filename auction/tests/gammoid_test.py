@@ -1,6 +1,6 @@
 from matroids.gammoid import Gammoid
 from auction.bidder import Bidder
-from auction.unit_step_auction import unit_step_auction
+from auction.auction import unit_step_auction
 
 def test_unit_step_auction():
   vertices = frozenset({

@@ -1,7 +1,7 @@
 import pytest
-from matroids.matroid import Matroid
+from matroids.general_matroid import GeneralMatroid
 from auction.bidder import Bidder
-from auction.unit_step_auction import unit_step_auction
+from auction.auction import unit_step_auction
 
 @pytest.fixture
 def main_paper_example():

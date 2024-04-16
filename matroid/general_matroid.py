@@ -1,4 +1,4 @@
-class Matroid:
+class GeneralMatroid:
   def __init__(self, groundset: frozenset, independent_sets: frozenset[frozenset]):
     self.groundset = groundset
     self.independent_sets = independent_sets

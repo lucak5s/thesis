@@ -1,7 +1,6 @@
-from matroids.matroid import Matroid
 import sympy as sp
 
-class LinearMatroid(Matroid):
+class LinearMatroid:
   def __init__(self, columns: list):
     self.matrix = sp.Matrix(columns).transpose()
     self.dual_matrix = linear_matrix_dual(self.matrix)

@@ -1,6 +1,6 @@
 from matroids.uniform_matroid import UniformMatroid
 from auction.bidder import Bidder
-from auction.unit_step_auction import unit_step_auction
+from auction.auction import unit_step_auction
 
 def test_unit_step_auction_1():
   groundset = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9, 10})

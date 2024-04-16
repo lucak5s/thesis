@@ -1,11 +1,10 @@
-from matroids.matroid import Matroid
 import copy
 
-class GraphicMatroid(Matroid):
+class GraphicMatroid:
   def __init__(self, vertices: frozenset, edges: frozenset):
     self.vertices = vertices
     self.edges = edges
-    self.graph_components = GraphUnionFind(vertices)
+    self.graph_components = UnionFind(vertices)
 
   def full_rank(self) -> int:
     graph_components = copy.deepcopy(self.graph_components)
@@ -32,7 +31,7 @@ class GraphicMatroid(Matroid):
   def delete(self, element):
     self.edges = frozenset(edge for edge in self.edges if edge != element)
 
-class GraphUnionFind:
+class UnionFind:
   def __init__(self, vertices: frozenset):
     self.parent_map = {vertex: vertex for vertex in vertices}
     self.rank = {vertex: 0 for vertex in vertices}

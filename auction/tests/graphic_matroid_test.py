@@ -1,6 +1,6 @@
 from matroids.graphic_matroid import GraphicMatroid
 from auction.bidder import Bidder
-from auction.unit_step_auction import unit_step_auction
+from auction.auction import unit_step_auction
 
 def test_main_paper_example():
   vertices = frozenset({1, 2, 3, 4})

@@ -1,6 +1,4 @@
-from matroids.matroid import Matroid
-
-class UniformMatroid(Matroid):
+class UniformMatroid:
   def __init__(self, groundset: frozenset, k: int):
     self.groundset = groundset
     self.k = k

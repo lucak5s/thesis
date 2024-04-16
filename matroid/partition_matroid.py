@@ -1,7 +1,6 @@
 from typing import List, Tuple
-from matroids.matroid import Matroid
 
-class PartitionMatroid(Matroid):
+class PartitionMatroid:
   def __init__(self, groundset: frozenset, partitions: List[Tuple[frozenset, int]]):
     self.groundset = groundset
     self.partitions = partitions
