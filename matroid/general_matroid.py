@@ -16,7 +16,7 @@ class GeneralMatroid:
         S = Y
     return len(S)
 
-  def unique_cocircuit(self, X: frozenset) -> frozenset:
+  def cocircuit(self, X: frozenset) -> frozenset:
     S = frozenset()
     for e in self.groundset.difference(X):
       Y = S.union(frozenset([e]))
@@ -28,11 +28,11 @@ class GeneralMatroid:
       if self.independence_oracle(Y):
         cocircuit = cocircuit.union(frozenset([e]))
     return cocircuit
-  
-  def contract(self, item):
-    self.groundset = frozenset(element for element in self.groundset if element != item)
-    self.contracted_elements = self.contracted_elements.union(frozenset([item]))
 
   def delete(self, item):
     self.groundset = frozenset(element for element in self.groundset if element != item)
     self.independent_sets = frozenset(set for set in self.independent_sets if not item in set)
+  
+  def contract(self, item):
+    self.groundset = frozenset(element for element in self.groundset if element != item)
+    self.contracted_elements = self.contracted_elements.union(frozenset([item]))

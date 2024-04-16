@@ -6,10 +6,7 @@ class LinearMatroid:
     self.dual_matrix = linear_matrix_dual(self.matrix)
     self.deleted_columns = frozenset()
 
-  def full_rank(self) -> int:
-    return self.matrix.rank()
-
-  def unique_cocircuit(self, X: frozenset) -> frozenset:
+  def cocircuit(self, X: frozenset) -> frozenset:
     X = X.difference(self.deleted_columns)
     indices = [index for index in X]
     matrix = self.dual_matrix[:, indices]

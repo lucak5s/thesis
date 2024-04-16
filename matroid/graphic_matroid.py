@@ -6,12 +6,6 @@ class GraphicMatroid:
     self.edges = edges
     self.graph_components = UnionFind(vertices)
 
-  def full_rank(self) -> int:
-    graph_components = copy.deepcopy(self.graph_components)
-    for x, y in self.edges:
-      graph_components.union(x, y)
-    return len(self.vertices) - graph_components.count_components()
-
   def unique_cocircuit(self, X: frozenset) -> frozenset:
     graph_components = copy.deepcopy(self.graph_components)
     for x, y in self.edges.difference(X):
@@ -36,13 +30,11 @@ class UnionFind:
     self.parent_map = {vertex: vertex for vertex in vertices}
     self.rank = {vertex: 0 for vertex in vertices}
   
-  # find with path compression
   def find(self, x):
     if self.parent_map[x] != x:
       self.parent_map[x] = self.find(self.parent_map[x])
     return self.parent_map[x]
   
-  # union by rank
   def union(self, x, y):
     root_x = self.find(x)
     root_y = self.find(y)

@@ -3,18 +3,14 @@ class UniformMatroid:
     self.groundset = groundset
     self.k = k
 
-  def full_rank(self) -> int:
-    return self.k
-
-  def unique_cocircuit(self, X: frozenset) -> frozenset:
+  def cocircuit(self, X: frozenset) -> frozenset:
     if len(X) != len(self.groundset) - self.k + 1: return frozenset()
     return X
+
+  def delete(self, item):
+    self.groundset = frozenset(element for element in self.groundset if element != item)
   
   def contract(self, item):
     self.groundset = frozenset(element for element in self.groundset if element != item)
     self.k -= 1
-
-  def delete(self, item):
-    self.groundset = frozenset(element for element in self.groundset if element != item)
-    print(self.groundset)
 
