@@ -30,7 +30,7 @@ class PlanarMatroid:
             dual_graph.add_node(right_face_node)
             dual_graph.add_node(left_face_node)
 
-            dual_graph.add_edge(right_face_node, left_face_node, key=frozenset({v, w}))
+            dual_graph.add_edge(right_face_node, left_face_node, edge=frozenset({v, w}))
     return dual_graph
 
   def cocircuit(self, X: frozenset) -> frozenset:
@@ -88,5 +88,6 @@ class PlanarMatroid:
 
 edges = [(1, 2), (1, 3), (2, 3), (3, 4), (2, 4), (2, 5), (4, 5)]
 matroid = PlanarMatroid(edges)
-cocircuit = matroid.cocircuit(frozenset([(1, 2), (1, 3), (2, 3), (3, 4), (2, 4), (2, 5), (4, 5)]))
-print(cocircuit)
+print(matroid.dual_graph.edges(data=True))
+# cocircuit = matroid.cocircuit(frozenset([(1, 2), (1, 3), (2, 3), (3, 4), (2, 4), (2, 5), (4, 5)]))
+# print(cocircuit)
