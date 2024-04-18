@@ -30,7 +30,6 @@ class Bidder:
     return max_element
   
   def award_element(self, element, price: int):
-    print(f'awarded element {element} to bidder {self.name} at price ${price}')
     self.valuations.pop(element)
 
   def dropout(self, element):

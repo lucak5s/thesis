@@ -1,5 +1,5 @@
 import pytest
-from matroids.general_matroid import GeneralMatroid
+from matroid.general_matroid import GeneralMatroid
 from auction.bidder import Bidder
 from auction.auction import unit_step_auction
 
@@ -7,7 +7,7 @@ from auction.auction import unit_step_auction
 def main_paper_example():
   groundset = frozenset(['a:5', 'b:2', 'b:3', 'a:4', 'c:1'])
   independent_sets = frozenset({frozenset({'a:5'}), frozenset({'b:2', 'c:1', 'a:4'}), frozenset({'c:1', 'a:5', 'a:4'}), frozenset({'b:2', 'c:1', 'b:3'}), frozenset({'a:5', 'c:1'}), frozenset({'a:5', 'c:1', 'b:3'}), frozenset({'a:5', 'b:3'}), frozenset({'a:5', 'b:2'}), frozenset({'a:4', 'b:3'}), frozenset({'a:5', 'a:4'}), frozenset({'b:2', 'a:5', 'a:4'}), frozenset({'b:2', 'a:4', 'b:3'}), frozenset({'a:5', 'b:2', 'b:3'}), frozenset({'a:4'}), frozenset({'c:1', 'b:3'}), frozenset({'b:3'}), frozenset({'c:1', 'a:4'}), frozenset({'b:2'}), frozenset({'a:5', 'a:4', 'b:3'}), frozenset(), frozenset({'b:2', 'b:3'}), frozenset({'c:1'}), frozenset({'b:2', 'c:1'}), frozenset({'b:2', 'a:4'})})
-  matroid = Matroid(groundset, independent_sets)
+  matroid = GeneralMatroid(groundset, independent_sets)
 
   bidder_a = Bidder({'a:5': 5, 'a:4': 4}, 'a')
   bidder_b = Bidder({'b:2': 2, 'b:3': 3}, 'b')

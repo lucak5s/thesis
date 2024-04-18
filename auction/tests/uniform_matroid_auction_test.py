@@ -1,4 +1,4 @@
-from matroids.uniform_matroid import UniformMatroid
+from matroid.uniform_matroid import UniformMatroid
 from auction.bidder import Bidder
 from auction.auction import unit_step_auction
 

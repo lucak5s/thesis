@@ -1,4 +1,4 @@
-from matroids.partition_matroid import PartitionMatroid
+from matroid.partition_matroid import PartitionMatroid
 from auction.bidder import Bidder
 from auction.auction import unit_step_auction
 

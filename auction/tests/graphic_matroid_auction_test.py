@@ -1,4 +1,4 @@
-from matroids.graphic_matroid import GraphicMatroid
+from matroid.graphic_matroid import GraphicMatroid
 from auction.bidder import Bidder
 from auction.auction import unit_step_auction
 
