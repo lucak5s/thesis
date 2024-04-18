@@ -6,7 +6,10 @@ class GraphicMatroid:
     self.edges = edges
     self.graph_components = UnionFind(vertices)
 
-  def unique_cocircuit(self, X: frozenset) -> frozenset:
+  def is_empty(self):
+    return len(self.edges) == 0
+
+  def cocircuit(self, X: frozenset) -> frozenset:
     graph_components = copy.deepcopy(self.graph_components)
     for x, y in self.edges.difference(X):
       graph_components.union(x, y)

@@ -8,13 +8,8 @@ class GeneralMatroid:
     Y = X.union(self.contracted_elements) 
     return Y in self.independent_sets
   
-  def full_rank(self) -> int:
-    S = frozenset()
-    for e in self.groundset:
-      Y = S.union(frozenset([e]))
-      if self.independence_oracle(Y):
-        S = Y
-    return len(S)
+  def is_empty(self):
+    return len(self.groundset) == 0
 
   def cocircuit(self, X: frozenset) -> frozenset:
     S = frozenset()

@@ -4,6 +4,9 @@ class PartitionMatroid:
   def __init__(self, groundset: frozenset, partitions: List[Tuple[frozenset, int]]):
     self.groundset = groundset
     self.partitions = partitions
+    
+  def is_empty(self):
+    return len(self.groundset) == 0
 
   def cocircuit(self, X: frozenset) -> frozenset:
     cocircuit = None
