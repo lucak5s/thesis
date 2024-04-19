@@ -2,8 +2,12 @@ import networkx as nx
 
 class PlanarMatroid:
   def __init__(self, edges: frozenset):
-    self.graph = nx.Graph(edges)
-    self.dual_graph = self.derive_dual_representation(self.graph)
+    networkx_edges = [tuple(e) for e in edges]
+    self.graph = nx.Graph(networkx_edges)
+    self.dual_graph, self.edges_map = self.derive_dual_representation(self.graph)
+    
+  def is_empty(self):
+    return len(self.dual_graph.edges()) == 0
 
   def derive_dual_representation(self, graph):
     is_planar, embedding = nx.check_planarity(graph)
@@ -14,6 +18,7 @@ class PlanarMatroid:
   
   def build_dual_graph(self, embedding):
     dual_graph = nx.MultiGraph()
+    edges_map = {}
     visited_edges = set()
 
     for v in embedding.nodes():
@@ -30,64 +35,64 @@ class PlanarMatroid:
             dual_graph.add_node(right_face_node)
             dual_graph.add_node(left_face_node)
 
-            dual_graph.add_edge(right_face_node, left_face_node, edge=frozenset({v, w}))
-    return dual_graph
+            dual_graph.add_edge(right_face_node, left_face_node, key=frozenset({v, w}))
+            edges_map[frozenset({v, w})] = (right_face_node, left_face_node, frozenset({v, w}))
+    return (dual_graph, edges_map)
 
   def cocircuit(self, X: frozenset) -> frozenset:
-    visited = {node: False for node in self.dual_graph.nodes()}
-    stack = []
-    edge_dict = {frozenset({u, v}): False for u, v in X}
-
-    def dfs(u, parent):
-        print(f"Visiting: {u}")
-        visited[u] = True
-        stack.append(u)
-        for v in self.dual_graph.neighbors(u):
-            for k in self.dual_graph[u][v]:
-                edge_uv = frozenset({u, v})
-                if edge_uv in edge_dict and not edge_dict[edge_uv]:
-                    edge_dict[edge_uv] = True
-                    print(f"Processing edge: {u}-{v}")
-                    if v == parent:
-                        continue
-                    if visited[v]:
-                        cycle_start = stack.index(v)
-                        print(f"Cycle detected starting at: {v}")
-                        return stack[cycle_start:]
-                    else:
-                        result = dfs(v, u)
-                        if result:
-                            return result
+    edges = [self.edges_map[e] for e in X]
+    subgraph = self.dual_graph.edge_subgraph(edges)
+    
+    # parallel edges or loops
+    for u, v in subgraph.edges():
+      if subgraph.number_of_edges(u, v) > 1 or u == v: 
+        edge_data = subgraph.get_edge_data(u, v)
+        circuit = list(edge_data.keys())
+        return circuit
+        
+    # cycle test
+    def dfs(current, parent, visited, stack):
+        visited.add(current)
+        stack.append(current)
+        for neighbor in subgraph.neighbors(current):
+            if neighbor not in visited:
+                parent[neighbor] = current
+                cycle = dfs(neighbor, parent, visited, stack)
+                if cycle:
+                    return cycle
+            elif neighbor in visited and neighbor != parent[current]:
+                cycle_index = stack.index(neighbor)
+                cycle_nodes = stack[cycle_index:] + [neighbor]
+                cycle_edges = []
+                for i in range(len(cycle_nodes) - 1):
+                    u = cycle_nodes[i]
+                    v = cycle_nodes[i + 1]
+                    key = next(iter(subgraph[u][v])) 
+                    cycle_edges.append((u, v, key))
+                return cycle_edges
         stack.pop()
-        print(f"Backtracking from: {u}")
         return None
 
-    for node in self.dual_graph.nodes():
-        if not visited[node]:
-            print(f"Starting DFS from node: {node}")
-            cycle = dfs(node, None)
+    visited = set()
+    parent = {}
+    for node in subgraph.nodes():
+        if node not in visited:
+            cycle = dfs(node, parent, visited, [])
             if cycle:
-                cycle_edges = []
-                for i in range(len(cycle)):
-                    next_node = cycle[(i + 1) % len(cycle)]
-                    edge_cycle = frozenset({cycle[i], next_node})
-                    if edge_cycle in X:
-                        cycle_edges.append((cycle[i], next_node))
-                print(f"Cycle edges in X: {cycle_edges}")
-                return frozenset(cycle_edges)
-    print("No cycle found")
-    return frozenset()
-
-
+                return [e[2] for e in cycle]
+    return None
+    
   def delete(self, element):
-    pass
+    u, v, k = self.edges_map[element]
+    self.dual_graph.remove_edge(u, v, k)
+    
+    for node in self.dual_graph.neighbors(v):
+        for key in self.dual_graph[v][node]:
+            self.edges_map[key] = (u, node, key)
+            self.dual_graph.add_edge(u, node, key=key, **self.dual_graph[v][node][key])
+                    
+    self.dual_graph.remove_node(v)
 
   def contract(self, element):
-    pass
-
-
-edges = [(1, 2), (1, 3), (2, 3), (3, 4), (2, 4), (2, 5), (4, 5)]
-matroid = PlanarMatroid(edges)
-print(matroid.dual_graph.edges(data=True))
-# cocircuit = matroid.cocircuit(frozenset([(1, 2), (1, 3), (2, 3), (3, 4), (2, 4), (2, 5), (4, 5)]))
-# print(cocircuit)
+    u, v, k = self.edges_map[element]
+    self.dual_graph.remove_edge(u, v, k)
