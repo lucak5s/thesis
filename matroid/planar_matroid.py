@@ -3,7 +3,7 @@ import networkx as nx
 class PlanarMatroid:
   def __init__(self, edges: frozenset):
     networkx_edges = [tuple(e) for e in edges]
-    self.graph = nx.Graph(networkx_edges)
+    self.graph = nx.MultiGraph(networkx_edges)
     self.dual_graph, self.edges_map = self.derive_dual_representation(self.graph)
     
   def is_empty(self):
@@ -84,9 +84,12 @@ class PlanarMatroid:
     
   def delete(self, element):
     u, v, k = self.edges_map[element]
+    if not self.dual_graph.has_edge(u, v, k): return 
+    
     self.dual_graph.remove_edge(u, v, k)
     
-    for node in self.dual_graph.neighbors(v):
+    neighbors = self.dual_graph.neighbors(v)
+    for node in neighbors:
         for key in self.dual_graph[v][node]:
             self.edges_map[key] = (u, node, key)
             self.dual_graph.add_edge(u, node, key=key, **self.dual_graph[v][node][key])
@@ -95,4 +98,6 @@ class PlanarMatroid:
 
   def contract(self, element):
     u, v, k = self.edges_map[element]
+    if not self.dual_graph.has_edge(u, v, k): return 
+
     self.dual_graph.remove_edge(u, v, k)
