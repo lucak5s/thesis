@@ -14,6 +14,7 @@ class LinearMatroid:
     not_identity_matrix_columns = [index for index in range(rref_matrix.cols) if index not in identity_matrix_columns]
 
     dual_matrix = rref_matrix[:, not_identity_matrix_columns].transpose()
+    dual_matrix = dual_matrix * (-1)
     I = sp.eye(dual_matrix.rows)
     dual_matrix = dual_matrix.row_join(I)
 

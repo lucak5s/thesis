@@ -25,7 +25,7 @@ def random_planar_graph(num_nodes, attempts=1000):
         add_edge_if_planar(G, u, v)
     return G
 
-num_nodes = 20
+num_nodes = 10
 num_attempts = 300
 G = random_planar_graph(num_nodes, num_attempts)
 
@@ -33,21 +33,7 @@ vertices = frozenset(G.nodes())
 edges = frozenset([frozenset(edge) for edge in G.edges()])
 weighted_edges = [(edge, random.randint(1, 100)) for edge in edges]
 
-###
-
-graphic_bidders = [Bidder({edge: weight}, str(edge)) for edge, weight in weighted_edges]
-graphic_matroid = GraphicMatroid(vertices, edges)
-graphic_base = unit_step_auction(graphic_matroid, graphic_bidders)
-print('base:', graphic_base)
-
-###
-
-planar_bidders = [Bidder({edge: weight}, str(edge)) for edge, weight in weighted_edges]
-planar_matroid = PlanarMatroid(edges)
-planar_base = unit_step_auction(planar_matroid, planar_bidders)
-print('base:', planar_base)
-
-### 
+### Linear Matroid ###
 
 def vertex_edge_incidence_matrix(vertices, edges):
     num_vertices = len(vertices)
@@ -58,14 +44,36 @@ def vertex_edge_incidence_matrix(vertices, edges):
 
     for i, edge in enumerate(edges):
         u, v = tuple(edge)
+        if u == v: continue
         vertex_edge_matrix[node_index_map[u], i] = 1
         vertex_edge_matrix[node_index_map[v], i] = -1
 
     return vertex_edge_matrix
 
 linear_bidders = [Bidder({index: weight}, str(edge)) for index, (edge, weight) in enumerate(weighted_edges)]
+index_edge_map = {index: edge for index, (edge, weight) in enumerate(weighted_edges)}
 incidence_matrix = vertex_edge_incidence_matrix(list(vertices), [edge for edge, weight in weighted_edges])
 matrix = sp.Matrix(incidence_matrix)
 linear_matroid = LinearMatroid(matrix)
 linear_base = unit_step_auction(linear_matroid, linear_bidders)
-print('base:', linear_base)
+linear_base_in_edges = frozenset([index_edge_map[index] for index in linear_base])
+print('base:', linear_base_in_edges)
+
+### Graphic Matroid ###
+
+graphic_bidders = [Bidder({edge: weight}, str(edge)) for edge, weight in weighted_edges]
+graphic_matroid = GraphicMatroid(vertices, edges)
+graphic_base = unit_step_auction(graphic_matroid, graphic_bidders)
+print('base:', graphic_base)
+
+### Planar Matroid ###
+
+planar_bidders = [Bidder({edge: weight}, str(edge)) for edge, weight in weighted_edges]
+planar_matroid = PlanarMatroid(edges)
+planar_base = unit_step_auction(planar_matroid, planar_bidders)
+print('base:', planar_base)
+
+### Correctness ###
+
+print(graphic_base == linear_base_in_edges)
+print(planar_base == graphic_base)
