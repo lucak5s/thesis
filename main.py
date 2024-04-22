@@ -25,9 +25,8 @@ def random_planar_graph(num_nodes, attempts=1000):
         add_edge_if_planar(G, u, v)
     return G
 
-num_nodes = 10
-num_attempts = 300
-G = random_planar_graph(num_nodes, num_attempts)
+num_nodes = 100
+G = random_planar_graph(num_nodes)
 
 vertices = frozenset(G.nodes())
 edges = frozenset([frozenset(edge) for edge in G.edges()])
