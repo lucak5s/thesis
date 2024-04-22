@@ -1,4 +1,5 @@
 import networkx as nx
+import copy
 
 class PlanarMatroid:
   def __init__(self, edges: frozenset):
@@ -88,7 +89,7 @@ class PlanarMatroid:
     
     self.dual_graph.remove_edge(u, v, k)
     
-    neighbors = self.dual_graph.neighbors(v)
+    neighbors = copy.deepcopy(self.dual_graph.neighbors(v))
     for node in neighbors:
         for key in self.dual_graph[v][node]:
             self.edges_map[key] = (u, node, key)

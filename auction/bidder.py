@@ -31,6 +31,3 @@ class Bidder:
   
   def award_element(self, element, price: int):
     self.valuations.pop(element)
-
-  def dropout(self, element):
-    self.valuations.pop(element)

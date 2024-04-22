@@ -1,8 +1,8 @@
 import sympy as sp
 
 class LinearMatroid:
-  def __init__(self, columns: list):
-    self.matrix = sp.Matrix(columns).transpose()
+  def __init__(self, matrix: sp.Matrix):
+    self.matrix = matrix
     self.dual_matrix = self.derive_dual_representation(self.matrix)
     self.deleted_columns = frozenset()
   
