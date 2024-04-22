@@ -18,19 +18,20 @@ def add_edge_if_planar(G, u, v):
     return True
 
 def random_planar_graph(num_nodes, attempts=1000):
+    attempts = max(num_nodes, attempts)
     G = nx.Graph()
     G.add_nodes_from(range(num_nodes))
     for _ in range(attempts):
-        u, v = random.sample(G.nodes, 2)
+        u, v = random.sample(list(G.nodes), 2)
         add_edge_if_planar(G, u, v)
     return G
 
-num_nodes = 100
+num_nodes = 50
 G = random_planar_graph(num_nodes)
 
 vertices = frozenset(G.nodes())
 edges = frozenset([frozenset(edge) for edge in G.edges()])
-weighted_edges = [(edge, random.randint(1, 100)) for edge in edges]
+weighted_edges = [(edge, random.randint(1, 1000)) for edge in edges]
 
 ### Linear Matroid ###
 

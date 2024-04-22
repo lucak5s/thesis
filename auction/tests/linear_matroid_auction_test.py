@@ -1,19 +1,17 @@
 from matroid.linear_matroid import LinearMatroid
 from auction.bidder import Bidder
 from auction.auction import unit_step_auction
+import sympy as sp
 
 def test_unit_step_auction_1():
-  columns = [
-    [1, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-    [0, 1, 1, -1],
-    [1, 0, 1, 1],
-    [1, 1, 0, 1],
-    [-1, 1, 1, 0]
+  array = [
+    [1, 0, 0, 0, 0, 1, 1, -1],
+    [0, 1, 0, 0, 1, 0, 1, 1],
+    [0, 0, 1, 0, 1, 1, 0, 1],
+    [0, 0, 0, 1, -1, 1, 1, 0]
   ]
-  matroid = LinearMatroid(columns)
+  matrix = sp.Matrix(array)
+  matroid = LinearMatroid(matrix)
 
   bidder_a = Bidder({0: 2}, 'a')
   bidder_b = Bidder({1: 6}, 'b')
@@ -29,18 +27,15 @@ def test_unit_step_auction_1():
   assert base == frozenset({1, 2, 4, 6})
 
 def test_unit_step_auction_2():
-  columns = [
-    [1, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0],
-    [0, 0, 0, 1, 0],
-    [0, 0, 0, 0, 1],
-    [1, 1, 0, 0, 0],
-    [0, 1, 1, 0, 0],
-    [1, 1, 0, 1, 0],
-    [0, 1, 1, 1, 1],
+  array = [
+    [1, 0, 0, 0, 0, 1, 0, 1, 0],
+    [0, 1, 0, 0, 0, 1, 1, 1, 1],
+    [0, 0, 1, 0, 0, 0, 1, 0, 1],
+    [0, 0, 0, 1, 0, 0, 0, 1, 1],
+    [0, 0, 0, 0, 1, 0, 0, 0, 1]
   ]
-  matroid = LinearMatroid(columns)
+  matrix = sp.Matrix(array)
+  matroid = LinearMatroid(matrix)
 
   bidder_a = Bidder({0: 2}, 'a')
   bidder_b = Bidder({1: 6}, 'b')
@@ -55,3 +50,23 @@ def test_unit_step_auction_2():
 
   base = unit_step_auction(matroid, bidders)
   assert base == frozenset({2, 4, 5, 6, 7})
+  
+def test_main_paper_example():
+  edges = [frozenset({1, 2}), frozenset({1, 3}), frozenset({2, 3}), frozenset({3, 4}), frozenset({2, 4})]
+
+  bidder_a = Bidder({0: 5, 3: 4}, 'a')
+  bidder_b = Bidder({1: 2, 4: 3}, 'b')
+  bidder_c = Bidder({2: 1}, 'c')
+  bidders = [bidder_a, bidder_b, bidder_c]
+
+  incidence_array = [
+      [1, 1, 0, 0, 0],
+      [-1, 0, 1, 0, 1],
+      [0, -1, -1, 1, 0],
+      [0, 0, 0, -1, -1]
+  ]
+
+  incidence_matrix = sp.Matrix(incidence_array)
+  linear_matroid = LinearMatroid(incidence_matrix)
+  base = unit_step_auction(linear_matroid, bidders)
+  assert base == frozenset({0, 3, 4})

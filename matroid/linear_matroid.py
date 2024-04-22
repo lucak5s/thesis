@@ -12,13 +12,18 @@ class LinearMatroid:
   def derive_dual_representation(self, matrix):
     rref_matrix, identity_matrix_columns = matrix.rref()
     not_identity_matrix_columns = [index for index in range(rref_matrix.cols) if index not in identity_matrix_columns]
-
+    
+    nonzero_rows = [i for i in range(rref_matrix.rows) if any(rref_matrix[i, j] != 0 for j in range(rref_matrix.cols))]
+    rref_matrix = rref_matrix[nonzero_rows, :]
+    
     dual_matrix = rref_matrix[:, not_identity_matrix_columns].transpose()
     dual_matrix = dual_matrix * (-1)
+
     I = sp.eye(dual_matrix.rows)
     dual_matrix = dual_matrix.row_join(I)
 
     order = list(identity_matrix_columns) + not_identity_matrix_columns
+    
     dual_matrix = dual_matrix[:, order]
     return dual_matrix
 
@@ -54,6 +59,8 @@ class LinearMatroid:
         pivot_row = i
         break
     
+    # if pivot_row == None: return
+  
     self.dual_matrix[pivot_row, :] = self.dual_matrix[pivot_row, :] / self.dual_matrix[pivot_row, element]
     
     for i in range(rows):
