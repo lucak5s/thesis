@@ -2,8 +2,7 @@ import sympy as sp
 
 class LinearMatroid:
   def __init__(self, matrix: sp.Matrix):
-    self.matrix = matrix
-    self.dual_matrix = self.derive_dual_representation(self.matrix)
+    self.dual_matrix = self.derive_dual_representation(matrix)
     self.deleted_columns = frozenset()
   
   def is_empty(self):
@@ -34,9 +33,7 @@ class LinearMatroid:
     matrix = self.dual_matrix[:, indices]
     rref_matrix = matrix.rref()
     
-    # check if all columns are pivot columns
     if len(rref_matrix[1]) == matrix.cols: return frozenset()
-
     i = len(rref_matrix[1])
     for index in range(1, len(rref_matrix[1])):
       if rref_matrix[1][index] != rref_matrix[1][index-1] + 1:

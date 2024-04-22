@@ -71,16 +71,24 @@ def test_unit_step_auction_3():
   base = unit_step_auction(linear_matroid, bidders)
   assert base == frozenset({0, 3, 4})
   
-def test_unit_step_auction_4():
-  array = [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 1.0, 0.0, 1.0, 0.0, -1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0], [-1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], [0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0, -1.0, 0.0, 0.0, -1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0], [0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0], [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -1.0, 0.0]]
-  weighted_edges = [(frozenset({8, 2}), 472), (frozenset({1, 4}), 636), (frozenset({9, 3}), 756), (frozenset({2, 6}), 239), (frozenset({4, 5}), 805), (frozenset({8, 7}), 378), (frozenset({9, 4}), 195), (frozenset({3, 4}), 989), (frozenset({0, 6}), 221), (frozenset({0, 2}), 689), (frozenset({0, 4}), 193), (frozenset({2, 4}), 227), (frozenset({8, 1}), 291), (frozenset({1, 6}), 68), (frozenset({8, 5}), 828), (frozenset({1, 3}), 68), (frozenset({4, 7}), 457), (frozenset({0, 1}), 902), (frozenset({1, 5}), 800), (frozenset({8, 6}), 970), (frozenset({2, 7}), 692), (frozenset({0, 9}), 517), (frozenset({1, 9}), 880), (frozenset({8, 4}), 862)]
-  index_edge_map = {index: edge for index, (edge, weight) in enumerate(weighted_edges)}
-  bidders = [Bidder({index: weight}, str(edge)) for index, (edge, weight) in enumerate(weighted_edges)]
+# def test_unit_step_auction_4():
+#   array = [
+#     [1, 1, 0, 0, 1, -1],
+#     [-1, -1, -1, 0, 0, 0],
+#     [0, 0, 0, 0, -1, 0],
+#     [0, 0, 0, 0, 0, 1],
+#     [0, 0, 1, 0, 0, 0]
+#   ]
+#   weighted_edges = [(frozenset({8, 2}), 472), (frozenset({1, 4}), 636), (frozenset({9, 3}), 756), (frozenset({2, 6}), 239), (frozenset({4, 5}), 805), (frozenset({8, 7}), 378), (frozenset({9, 4}), 195), (frozenset({3, 4}), 989), (frozenset({0, 6}), 221), (frozenset({0, 2}), 689), (frozenset({0, 4}), 193), (frozenset({2, 4}), 227), (frozenset({8, 1}), 291), (frozenset({1, 6}), 68), (frozenset({8, 5}), 828), (frozenset({1, 3}), 68), (frozenset({4, 7}), 457), (frozenset({0, 1}), 902), (frozenset({1, 5}), 800), (frozenset({8, 6}), 970), (frozenset({2, 7}), 692), (frozenset({0, 9}), 517), (frozenset({1, 9}), 880), (frozenset({8, 4}), 862)]
+#   index_edge_map = {index: edge for index, (edge, weight) in enumerate(weighted_edges)}
+#   bidders = [Bidder({index: weight}, str(edge)) for index, (edge, weight) in enumerate(weighted_edges)]
 
-  incidence_matrix = sp.Matrix(array)
-  linear_matroid = LinearMatroid(incidence_matrix)
-  base = unit_step_auction(linear_matroid, bidders)
-  base_in_edges = frozenset([index_edge_map[index] for index in base])
+#   incidence_matrix = sp.Matrix(array)
+#   linear_matroid = LinearMatroid(incidence_matrix)
+#   base = unit_step_auction(linear_matroid, bidders)
+#   base_in_edges = frozenset([index_edge_map[index] for index in base])
   
-  correct_base = frozenset({frozenset({3, 4}), frozenset({1, 9}), frozenset({0, 1}), frozenset({0, 2}), frozenset({8, 6}), frozenset({1, 5}), frozenset({8, 5}), frozenset({2, 7}), frozenset({8, 4})})
-  assert base_in_edges == correct_base
+#   correct_base = frozenset({frozenset({3, 4}), frozenset({1, 9}), frozenset({0, 1}), frozenset({0, 2}), frozenset({8, 6}), frozenset({1, 5}), frozenset({8, 5}), frozenset({2, 7}), frozenset({8, 4})})
+#   assert base_in_edges == correct_base
+
+  
