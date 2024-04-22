@@ -31,45 +31,41 @@ G = random_planar_graph(num_nodes, num_attempts)
 
 vertices = frozenset(G.nodes())
 edges = frozenset([frozenset(edge) for edge in G.edges()])
+weighted_edges = [(edge, random.randint(1, 100)) for edge in edges]
 
-bidders_graphic = [Bidder({edge: random.randint(1, 100)}, str(edge)) for edge in edges]
-bidders_planar = copy.deepcopy(bidders_graphic)
-bidders_linear = copy.deepcopy(bidders_graphic)
+###
 
-# graphic_matroid = GraphicMatroid(vertices, edges)
-# graphic_base = unit_step_auction(graphic_matroid, bidders_graphic)
-# print('base:', graphic_base)
+graphic_bidders = [Bidder({edge: weight}, str(edge)) for edge, weight in weighted_edges]
+graphic_matroid = GraphicMatroid(vertices, edges)
+graphic_base = unit_step_auction(graphic_matroid, graphic_bidders)
+print('base:', graphic_base)
 
-# ###
+###
 
-# planar_matroid = PlanarMatroid(edges)
-# planar_base = unit_step_auction(planar_matroid, bidders_planar)
-# print('base:', planar_base)
-
-
+planar_bidders = [Bidder({edge: weight}, str(edge)) for edge, weight in weighted_edges]
+planar_matroid = PlanarMatroid(edges)
+planar_base = unit_step_auction(planar_matroid, planar_bidders)
+print('base:', planar_base)
 
 ### 
 
-def vertex_edge_incidence_matrix(G):
-    num_vertices = len(G.nodes)
-    num_edges = len(G.edges)
+def vertex_edge_incidence_matrix(vertices, edges):
+    num_vertices = len(vertices)
+    num_edges = len(edges)
     vertex_edge_matrix = np.zeros((num_vertices, num_edges))
 
-    node_index_map = {node: i for i, node in enumerate(G.nodes)}
+    node_index_map = {node: i for i, node in enumerate(vertices)}
 
-    for i, (u, v, key) in enumerate(G.edges(keys=True)):
+    for i, edge in enumerate(edges):
+        u, v = tuple(edge)
         vertex_edge_matrix[node_index_map[u], i] = 1
         vertex_edge_matrix[node_index_map[v], i] = -1
 
     return vertex_edge_matrix
 
-np_array = nx.to_numpy_array(G)
-matrix = sp.Matrix(np_array)
+linear_bidders = [Bidder({index: weight}, str(edge)) for index, (edge, weight) in enumerate(weighted_edges)]
+incidence_matrix = vertex_edge_incidence_matrix(list(vertices), [edge for edge, weight in weighted_edges])
+matrix = sp.Matrix(incidence_matrix)
 linear_matroid = LinearMatroid(matrix)
-print(linear_matroid.dual_matrix)
-linear_base = unit_step_auction(linear_matroid, bidders_linear)
+linear_base = unit_step_auction(linear_matroid, linear_bidders)
 print('base:', linear_base)
-
-
-print(planar_base == graphic_base)
-print(planar_base == linear_base)
