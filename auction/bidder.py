@@ -14,9 +14,6 @@ class Bidder:
     for element, valuation in self.valuations.items():
       if valuation == price:
         critical_elements = critical_elements.union(frozenset([element]))
-
-    for element in critical_elements:
-      self.valuations.pop(element)
       
     return critical_elements
   
@@ -29,5 +26,8 @@ class Bidder:
         max_element = element
     return max_element
   
-  def award_element(self, element, price: int):
+  def award_element(self, element):
     self.valuations.pop(element)
+    
+  def drop_interest(self, element):
+    if element in self.valuations: self.valuations.pop(element)
