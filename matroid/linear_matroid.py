@@ -29,6 +29,10 @@ class LinearMatroid:
   def cocircuit(self, X: frozenset) -> frozenset:
     X = X.difference(self.deleted_columns)
     
+    for i in X:
+      if not any(self.dual_matrix[row_index, i] != 0 for row_index in range(self.dual_matrix.rows)):
+        return frozenset({i})
+    
     indices = [index for index in X]
     matrix = self.dual_matrix[:, indices]
     rref_matrix = matrix.rref()
@@ -49,6 +53,7 @@ class LinearMatroid:
     return cocircuit
 
   def delete(self, element):
+    if element in self.deleted_columns: return
     self.deleted_columns = self.deleted_columns.union(frozenset({element}))
 
     rows = self.dual_matrix.rows
@@ -58,6 +63,8 @@ class LinearMatroid:
       if self.dual_matrix[i, element] != 0:
         pivot_row = i
         break
+    
+    if pivot_row is None: return
   
     self.dual_matrix[pivot_row, :] = self.dual_matrix[pivot_row, :] / self.dual_matrix[pivot_row, element]
     
@@ -66,6 +73,6 @@ class LinearMatroid:
         self.dual_matrix[i, :] = self.dual_matrix[i, :] - self.dual_matrix[i, element] * self.dual_matrix[pivot_row, :]
     
     self.dual_matrix.row_del(pivot_row)
-    
+ 
   def contract(self, element):
     self.deleted_columns = self.deleted_columns.union(frozenset({element}))

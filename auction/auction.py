@@ -6,7 +6,9 @@ def unit_step_auction (matroid, bidders: List[Bidder]):
   price = 0
   while not matroid.is_empty():
     critical_elements = get_critical_elements(bidders, price)
+    awarded_elements = set()
     for critical_element in critical_elements:
+      if critical_element in awarded_elements: continue
       print(f'delete element {critical_element}')
       matroid.delete(critical_element)
       for bidder in bidders:
@@ -16,6 +18,7 @@ def unit_step_auction (matroid, bidders: List[Bidder]):
         chosen_element = bidder.choose_element_to_buy(cocircuit)
         print(f'award element {chosen_element} to bidder {bidder.name} at price ${price}')
         bidder.award_element(chosen_element)
+        awarded_elements.add(chosen_element)
         base = base.union(frozenset([chosen_element]))
         print(f'contract element {chosen_element}')
         matroid.contract(chosen_element)
