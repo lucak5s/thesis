@@ -29,10 +29,6 @@ class LinearMatroid:
   def cocircuit(self, X: frozenset) -> frozenset:
     X = X.difference(self.deleted_columns)
     
-    for i in X:
-      if not any(self.dual_matrix[row_index, i] != 0 for row_index in range(self.dual_matrix.rows)):
-        return frozenset({i})
-    
     indices = [index for index in X]
     matrix = self.dual_matrix[:, indices]
     rref_matrix = matrix.rref()
@@ -76,3 +72,4 @@ class LinearMatroid:
  
   def contract(self, element):
     self.deleted_columns = self.deleted_columns.union(frozenset({element}))
+  

@@ -4,8 +4,8 @@ import copy
 class PlanarMatroid:
   def __init__(self, edges: frozenset):
     networkx_edges = [tuple(e) for e in edges]
-    self.graph = nx.MultiGraph(networkx_edges)
-    self.dual_graph, self.edges_map = self.derive_dual_representation(self.graph)
+    graph = nx.MultiGraph(networkx_edges)
+    self.dual_graph, self.edges_map = self.derive_dual_representation(graph)
     
   def is_empty(self):
     return len(self.dual_graph.edges()) == 0

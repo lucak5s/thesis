@@ -18,15 +18,14 @@ def add_edge_if_planar(G, u, v):
     return True
 
 def random_planar_graph(num_nodes, attempts=1000):
-    attempts = max(num_nodes, attempts)
     G = nx.Graph()
     G.add_nodes_from(range(num_nodes))
     for _ in range(attempts):
-        u, v = random.sample(list(G.nodes), 2)
+        u, v = random.sample(list(G.nodes()), 2)
         add_edge_if_planar(G, u, v)
     return G
 
-num_nodes = 10
+num_nodes = 200
 G = random_planar_graph(num_nodes)
 
 vertices = frozenset(G.nodes())
@@ -57,9 +56,10 @@ matrix = sp.Matrix(incidence_matrix)
 linear_matroid = LinearMatroid(matrix)
 linear_base = unit_step_auction(linear_matroid, linear_bidders)
 linear_base_in_edges = frozenset([index_edge_map[index] for index in linear_base])
+print('base:', linear_base)
 print('base:', linear_base_in_edges)
 
-### Graphic Matroid ###
+## Graphic Matroid ###
 
 graphic_bidders = [Bidder({edge: weight}, str(edge)) for edge, weight in weighted_edges]
 graphic_matroid = GraphicMatroid(vertices, edges)

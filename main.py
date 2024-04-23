@@ -25,7 +25,7 @@ def random_planar_graph(num_nodes, attempts=1000):
         add_edge_if_planar(G, u, v)
     return G
 
-num_nodes = 8
+num_nodes = 200
 G = random_planar_graph(num_nodes)
 
 vertices = frozenset(G.nodes())
@@ -56,8 +56,21 @@ matrix = sp.Matrix(incidence_matrix)
 linear_matroid = LinearMatroid(matrix)
 linear_base = unit_step_auction(linear_matroid, linear_bidders)
 linear_base_in_edges = frozenset([index_edge_map[index] for index in linear_base])
-print('base:', linear_base)
 print('base:', linear_base_in_edges)
+
+### Max Weight Basis ###
+
+weighted_indices = [(index, weight) for index, (edge, weight) in enumerate(weighted_edges)]
+sorted_edges = sorted(weighted_indices, reverse=True, key=lambda x: x[1])
+base = []
+
+for index, _ in sorted_edges:
+    curr_matrix = matrix[:, base + [index]]
+    rref_matrix = curr_matrix.rref()
+    if len(rref_matrix[1]) == curr_matrix.cols: base.append(index)
+
+base_in_edges = frozenset([index_edge_map[index] for index in base])
+print(base_in_edges)
 
 ## Graphic Matroid ###
 
@@ -76,4 +89,5 @@ print('base:', planar_base)
 ### Correctness ###
 
 print(graphic_base == linear_base_in_edges)
+print(base_in_edges == graphic_base)
 print(planar_base == graphic_base)
