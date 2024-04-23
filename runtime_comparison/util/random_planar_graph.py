@@ -1,6 +1,5 @@
-import networkx as nx
-import numpy as np
 import random
+import networkx as nx
 
 def add_edge_if_planar(G, u, v):
     G.add_edge(u, v)
@@ -37,17 +36,3 @@ def random_planar_graph(num_nodes, attempts=1000):
         return G
     else:
         return None
-    
-def vertex_edge_incidence_matrix(vertices, edges):
-    num_vertices = len(vertices)
-    num_edges = len(edges)
-    vertex_edge_matrix = np.zeros((num_vertices, num_edges))
-
-    node_index_map = {node: i for i, node in enumerate(vertices)}
-    for i, edge in enumerate(edges):
-        u, v = tuple(edge)
-        if u == v: continue
-        vertex_edge_matrix[node_index_map[u], i] = 1
-        vertex_edge_matrix[node_index_map[v], i] = -1
-        
-    return vertex_edge_matrix

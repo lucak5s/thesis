@@ -5,7 +5,8 @@ from matroid.planar_matroid import PlanarMatroid
 from matroid.linear_matroid import LinearMatroid
 import random
 import sympy as sp
-from runtime_comparison.lib.util import random_planar_graph, vertex_edge_incidence_matrix
+from runtime_comparison.util.random_planar_graph import random_planar_graph
+from runtime_comparison.util.vertex_edge_incidence_matrix import vertex_edge_incidence_matrix
 
 G = random_planar_graph(100)
 vertices = frozenset(G.nodes())
