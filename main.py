@@ -25,7 +25,7 @@ def random_planar_graph(num_nodes, attempts=1000):
         add_edge_if_planar(G, u, v)
     return G
 
-num_nodes = 200
+num_nodes = 30
 G = random_planar_graph(num_nodes)
 
 vertices = frozenset(G.nodes())
@@ -53,10 +53,10 @@ linear_bidders = [Bidder({index: weight}, str(edge)) for index, (edge, weight) i
 index_edge_map = {index: edge for index, (edge, weight) in enumerate(weighted_edges)}
 incidence_matrix = vertex_edge_incidence_matrix(list(vertices), [edge for edge, weight in weighted_edges])
 matrix = sp.Matrix(incidence_matrix)
+matrix = matrix.applyfunc(lambda x: int(x))
 linear_matroid = LinearMatroid(matrix)
 linear_base = unit_step_auction(linear_matroid, linear_bidders)
 linear_base_in_edges = frozenset([index_edge_map[index] for index in linear_base])
-print('base:', linear_base_in_edges)
 
 ### Max Weight Basis ###
 
@@ -64,6 +64,8 @@ weighted_indices = [(index, weight) for index, (edge, weight) in enumerate(weigh
 sorted_edges = sorted(weighted_indices, reverse=True, key=lambda x: x[1])
 base = []
 
+matrix = LinearMatroid(matrix).dual_matrix
+matrix = LinearMatroid(matrix).dual_matrix
 for index, _ in sorted_edges:
     curr_matrix = matrix[:, base + [index]]
     rref_matrix = curr_matrix.rref()
@@ -77,17 +79,15 @@ print(base_in_edges)
 graphic_bidders = [Bidder({edge: weight}, str(edge)) for edge, weight in weighted_edges]
 graphic_matroid = GraphicMatroid(vertices, edges)
 graphic_base = unit_step_auction(graphic_matroid, graphic_bidders)
-print('base:', graphic_base)
 
 ### Planar Matroid ###
 
 planar_bidders = [Bidder({edge: weight}, str(edge)) for edge, weight in weighted_edges]
 planar_matroid = PlanarMatroid(edges)
 planar_base = unit_step_auction(planar_matroid, planar_bidders)
-print('base:', planar_base)
 
 ### Correctness ###
 
-print(graphic_base == linear_base_in_edges)
-print(base_in_edges == graphic_base)
-print(planar_base == graphic_base)
+print('graphic-planar', graphic_base == planar_base)
+print('graphic-greedy', graphic_base == base_in_edges)
+print('graphic-linear', graphic_base == linear_base_in_edges)
