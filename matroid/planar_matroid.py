@@ -85,20 +85,21 @@ class PlanarMatroid:
     
   def delete(self, element):
     u, v, k = self.edges_map[element]
-    if not self.dual_graph.has_edge(u, v, k): return 
+    if not self.dual_graph.has_edge(u, v, k): 
+      return 
     
     self.dual_graph.remove_edge(u, v, k)
     
-    neighbors = copy.deepcopy(self.dual_graph.neighbors(v))
-    for node in neighbors:
+    for node in self.dual_graph.neighbors(v):
         for key in self.dual_graph[v][node]:
             self.edges_map[key] = (u, node, key)
-            self.dual_graph.add_edge(u, node, key=key, **self.dual_graph[v][node][key])
-                    
+            self.dual_graph.add_edge(u, node, key=key)
+           
     self.dual_graph.remove_node(v)
 
   def contract(self, element):
     u, v, k = self.edges_map[element]
-    if not self.dual_graph.has_edge(u, v, k): return 
+    if not self.dual_graph.has_edge(u, v, k):
+      return 
 
     self.dual_graph.remove_edge(u, v, k)
