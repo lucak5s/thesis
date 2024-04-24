@@ -1,5 +1,5 @@
 import pytest
-from matroid.gammoid import FlowNetwork
+from matroid.gammoid import FlowNetwork, Gammoid
 
 
 ### Flow Network ###
@@ -58,8 +58,17 @@ def test_augment_flow():
     assert fn.graph['t']['c_out'] == 1
 
 
-### Base & Full Rank ###
+### Gammoid Init ###
+def test_gammoid_initialization():
+    vertices = frozenset({'1', '2', '3', '4', '5', '6'})
+    edges = frozenset({('1', '2'), ('1', '3'), ('3', '4'), ('4', '2'), ('2', '6'), ('5', '4')})
+    starting_vertices = frozenset({'1', '2', '3'})
+    destination_vertices = frozenset({'2', '3'})
+    
+    gammoid = Gammoid(vertices, edges, starting_vertices, destination_vertices)
 
+    assert True == False
+### Base ###
 
 ### Dual Matroid ###
 
