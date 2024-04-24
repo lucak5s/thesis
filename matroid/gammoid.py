@@ -5,7 +5,10 @@ class Gammoid:
   def __init__(self, vertices: frozenset, edges: frozenset[tuple], starting_vertices: frozenset, destination_vertices: frozenset):
     dual_vertices, dual_edges, self.dual_starting_vertices, self.dual_destination_vertices = self.derive_dual_representation(vertices, edges, starting_vertices, destination_vertices)
     self.dual_flow_network = FlowNetwork(dual_vertices, dual_edges, self.dual_starting_vertices, self.dual_destination_vertices)
-    
+  
+  def is_empty(self):
+    return len(self.dual_starting_vertices) == 0
+  
   def derive_dual_representation(self, vertices, edges, starting_vertices, destination_vertices):
     flow_network = FlowNetwork(vertices, edges, starting_vertices, destination_vertices)
     base_paths = self.base_paths(flow_network)
@@ -70,7 +73,6 @@ class Gammoid:
   
   def cocircuit(self, X: frozenset) -> frozenset:
     flow_network = copy.deepcopy(self.dual_flow_network)
-    print(flow_network.graph)
     element_path_map = {}
     cocircuit = set()
     
@@ -95,11 +97,14 @@ class Gammoid:
     
     return frozenset()
   
-  def delete(self, element):
-    pass
+  def delete(self, item):
+    self.dual_starting_vertices = frozenset(element for element in self.dual_starting_vertices if element != item)
+    
+    path = self.dual_flow_network.find_augmenting_path(item)
+    if path: self.dual_flow_network.augment_flow(path)
 
-  def contract(self, element):
-    pass
+  def contract(self, item):
+    self.dual_starting_vertices = frozenset(element for element in self.dual_starting_vertices if element != item)
 
 
 class FlowNetwork():

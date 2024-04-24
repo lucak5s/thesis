@@ -4,12 +4,12 @@ class GeneralMatroid:
     self.independent_sets = independent_sets
     self.contracted_elements = frozenset()
   
+  def is_empty(self):
+    return len(self.groundset) == 0
+  
   def independence_oracle(self, X: frozenset) -> bool:
     Y = X.union(self.contracted_elements) 
     return Y in self.independent_sets
-  
-  def is_empty(self):
-    return len(self.groundset) == 0
 
   def cocircuit(self, X: frozenset) -> frozenset:
     S = frozenset()

@@ -1,38 +1,39 @@
-# from matroid.gammoid import Gammoid
-# from auction.bidder import Bidder
-# from auction.auction import unit_step_auction
+from matroid.gammoid import Gammoid
+from auction.bidder import Bidder
+from auction.auction import unit_step_auction
 
-# def test_unit_step_auction():
-#   vertices = frozenset({
-#     'a', 'b', 'c', 'd', 'e', 'f', 'g'
-#   })
-#   edges = frozenset({
-#     ('a', 'c'),
-#     ('b', 'g'),
-#     ('b', 'd'),
-#     ('c', 'e'),
-#     ('e', 'd'),
-#     ('e', 'f')
-#   })
-#   sources = frozenset({
-#     'a', 'b', 'c', 'e'
-#   })
-#   sinks = frozenset({
-#     'g', 'c', 'd', 'e'
-#   })
+def test_uniform_matroid():
+  vertices = frozenset({
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'
+  })
 
-#   matroid = Gammoid(vertices, edges, sources, sinks)
+  
+  starting_vertices = frozenset({
+    'a', 'b', 'c', 'd', 'e', 'f'
+  })
+  destination_vertices = frozenset({
+    'g', 'h', 'i'
+  })
+  
+  edges = []
+  for u in starting_vertices:
+    for v in destination_vertices:
+      edges.append((u, v))
 
-#   bidder_a = Bidder({'d': 12}, 'a')
-#   bidder_b = Bidder({'g': 25}, 'b')
-#   bidder_c = Bidder({'c': 24}, 'c')
-#   bidder_d = Bidder({'e': 11}, 'd')
+  matroid = Gammoid(vertices, edges, starting_vertices, destination_vertices)
 
-#   bidders = [bidder_a, bidder_b, bidder_c, bidder_d]
+  bidder_a = Bidder({'a': 12}, 'a')
+  bidder_b = Bidder({'b': 25}, 'b')
+  bidder_c = Bidder({'c': 24}, 'c')
+  bidder_d = Bidder({'d': 11}, 'd')
+  bidder_e = Bidder({'e': 33}, 'e')
+  bidder_f = Bidder({'f': 1}, 'f')
 
-#   base = unit_step_auction(matroid, bidders)
+  bidders = [bidder_a, bidder_b, bidder_c, bidder_d, bidder_e, bidder_f]
 
-#   assert base == frozenset({'d', 'g', 'c'})
+  base = unit_step_auction(matroid, bidders)
+
+  assert base == frozenset({'b', 'c', 'e'})
 
 
 

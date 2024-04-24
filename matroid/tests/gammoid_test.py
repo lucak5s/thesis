@@ -70,9 +70,10 @@ def test_gammoid_initialization():
     
     gammoid = Gammoid(vertices, edges, starting_vertices, destination_vertices)
     
-    print('cocircuit:', gammoid.cocircuit(frozenset({'1', '2'})))
+    cocircuit = gammoid.cocircuit(frozenset({'1', '2'}))
 
-    assert True == False
+    assert cocircuit == frozenset({'1', '2'})
+    
 ### Base ###
 
 ### Dual Matroid ###
