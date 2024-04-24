@@ -5,33 +5,34 @@ class Gammoid:
   def __init__(self, vertices: frozenset, edges: frozenset[tuple], starting_vertices: frozenset, destination_vertices: frozenset):
     dual_vertices, dual_edges, self.dual_starting_vertices, self.dual_destination_vertices = self.derive_dual_representation(vertices, edges, starting_vertices, destination_vertices)
     self.dual_flow_network = FlowNetwork(dual_vertices, dual_edges, self.dual_starting_vertices, self.dual_destination_vertices)
-  
+    
   def derive_dual_representation(self, vertices, edges, starting_vertices, destination_vertices):
     flow_network = FlowNetwork(vertices, edges, starting_vertices, destination_vertices)
-    base, base_paths = self.base(flow_network, starting_vertices)
-    edges, destination_vertices = self.derive_base_representation(base, base_paths, edges)
+    base_paths = self.base_paths(flow_network)
+    edges, destination_vertices = self.derive_base_representation(base_paths, edges)
     vertices, edges = self.derive_duality_respecting_representation(vertices, edges, starting_vertices, destination_vertices)
     edges = self.reverse_edges(edges)
     return vertices, edges, starting_vertices, starting_vertices.difference(destination_vertices)
   
-  def base(self, flow_network, starting_vertices):
-    base = []
+  def base_paths(self, flow_network):
     base_paths = []
-    for s in starting_vertices:
-      path = flow_network.find_augmenting_path(s)
-      if not path: break
-      base.append(s)
+    path = flow_network.find_augmenting_path()
+    while path:
       base_paths.append(path)
       flow_network.augment_flow(path)
-    return (base, base_paths)
+      path = flow_network.find_augmenting_path()
+      
+    return base_paths
     
-  def derive_base_representation(self, base, base_paths, edges):
-    v = 't'
+  def derive_base_representation(self, base_paths, edges):
+    base = []
     for path in base_paths:
+      v = 't'
       while v != 's':
         u = path[v]
-        if u != 's' and v != 't':
-          edges = self.swap((u, v), edges)
+        if u.endswith('out') and v.endswith('in'):
+          edges = self.swap((u[:-4], v[:-3]), edges)
+        if u == 's': base.append(v[:-3])
         v = u
     return edges, base
   
@@ -68,7 +69,31 @@ class Gammoid:
     return frozenset(new_edges)
   
   def cocircuit(self, X: frozenset) -> frozenset:
-    pass
+    flow_network = copy.deepcopy(self.dual_flow_network)
+    print(flow_network.graph)
+    element_path_map = {}
+    cocircuit = set()
+    
+    for e in X:
+      path = flow_network.find_augmenting_path(e)
+      if path:
+        cocircuit.add(e)
+        element_path_map[e] = path
+        flow_network.augment_flow(path)
+      else:
+        for f in list(cocircuit):
+          f_path = element_path_map[f]
+          flow_network.reverse_augment_flow(f_path)
+    
+          e_path = flow_network.find_augmenting_path(e)
+          if not e_path: 
+            cocircuit.remove(f)
+          else: flow_network.augment_flow(f_path)
+      
+        cocircuit.add(e)
+        return frozenset(cocircuit)
+    
+    return frozenset()
   
   def delete(self, element):
     pass
@@ -124,4 +149,12 @@ class FlowNetwork():
       u = path[v]
       self.graph[u][v] = 0
       self.graph[v][u] = 1
-      v = path[v]
+      v = u
+      
+  def reverse_augment_flow(self, path):
+    v = 't'
+    while v != 's':
+      u = path[v]
+      self.graph[u][v] = 1
+      self.graph[v][u] = 0
+      v = u

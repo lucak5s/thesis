@@ -23,19 +23,22 @@ def test_initialization():
     assert fn.graph['c_out']['t'] == 1
 
 def test_find_augmenting_path():
-    vertices = ['a', 'b', 'c']
+    vertices = ['a', 'b', 'c', 'd']
     edges = [('a', 'b'), ('b', 'c')]
-    starting_vertices = ['a']
-    destination_vertices = ['c']
+    starting_vertices = ['a', 'd']
+    destination_vertices = ['c', 'd']
     fn = FlowNetwork(vertices, edges, starting_vertices, destination_vertices)
 
     path = fn.find_augmenting_path()
     assert 't' in path  
 
     path_with_element = fn.find_augmenting_path(element='a')
-    print(path_with_element)
     assert 'a_in' in path_with_element  
-    assert 't' in path 
+    assert 't' in path_with_element 
+    
+    
+    path_with_element = fn.find_augmenting_path(element='d')
+    assert 't' in path_with_element
 
 def test_augment_flow():
     vertices = ['a', 'b', 'c']
@@ -61,11 +64,13 @@ def test_augment_flow():
 ### Gammoid Init ###
 def test_gammoid_initialization():
     vertices = frozenset({'1', '2', '3', '4', '5', '6'})
-    edges = frozenset({('1', '2'), ('1', '3'), ('3', '4'), ('4', '2'), ('2', '6'), ('5', '4')})
+    edges = frozenset({('1', '2'), ('1', '3'), ('3', '4'), ('2', '4'), ('4', '6'), ('4', '5')})
     starting_vertices = frozenset({'1', '2', '3'})
-    destination_vertices = frozenset({'2', '3'})
+    destination_vertices = frozenset({'3', '5', '6'})
     
     gammoid = Gammoid(vertices, edges, starting_vertices, destination_vertices)
+    
+    print('cocircuit:', gammoid.cocircuit(frozenset({'1', '2'})))
 
     assert True == False
 ### Base ###
