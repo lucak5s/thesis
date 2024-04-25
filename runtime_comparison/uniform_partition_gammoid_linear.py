@@ -17,15 +17,14 @@ def uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio):
   uniform_runtimes = []
   
   for n in groundset_sizes:
-    print(n, k_ratio)
+    ### Random Input ###
+    
     if k_ratio == 'low-k':
       k = n / 10
     elif k_ratio == 'mid-k':
       k = n / 2
     else:
       k = n - 2
-      
-    ### Random Input ###
     
     groundset = random_groundset(n)
     weighted_groundset = [(element, random.randint(1, 1000)) for element in groundset]
