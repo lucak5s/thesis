@@ -1,40 +1,22 @@
-import runtime_comparison.planar_graphic_linear
+from runtime_comparison.planar_graphic_linear import planar_graphic_linear_comparison
 import matplotlib.pyplot as plt
 
-amount_of_nodes = []
+### Planar - Graphic - Linear ###
 
-### Sparse Graph ###
-sparse_runtimes = planar_graphic_linear_comparison(amount_of_nodes, ratio='sparse')
+amounts_of_nodes = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+density_types = ['sparse', 'semi-dense', 'dense']
 
-plt.plot(amount_of_nodes, sparse_runtimes.planar_runtimes, marker='x') 
-plt.plot(amount_of_nodes, sparse_runtimes.graphic_runtimes, marker='y') 
-plt.plot(amount_of_nodes, sparse_runtimes.linear_runtimes, marker='z') 
+for density in density_types:
+    runtimes = planar_graphic_linear_comparison(amounts_of_nodes, density_type=density)
+    
+    plt.plot(amounts_of_nodes, runtimes['planar_runtimes'], label='Planar Matroid')
+    plt.plot(amounts_of_nodes, runtimes['graphic_runtimes'], label='Graphic Matroid')
+    plt.plot(amounts_of_nodes, runtimes['linear_runtimes'], label='Linear Matroid')
+    
+    plt.title(f'{density.capitalize()} Graph')
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Runtime (s)')
+    plt.legend()
+    plt.show()
 
-plt.title('Sparse Graph / node-edge ratio: 1')
-plt.xlabel('Number of Nodes')
-plt.ylabel('Runtime (ms)')
-plt.show()
-
-### Semi-Dense Graph ###
-semi_dense_runtimes = planar_graphic_linear_comparison(amount_of_nodes, ratio='semi-dense')
-
-plt.plot(amount_of_nodes, sparse_runtimes.planar_runtimes, marker='x') 
-plt.plot(amount_of_nodes, sparse_runtimes.graphic_runtimes, marker='y') 
-plt.plot(amount_of_nodes, sparse_runtimes.linear_runtimes, marker='z') 
-
-plt.title('Sparse Graph / node-edge ratio: 1')
-plt.xlabel('Number of Nodes')
-plt.ylabel('Runtime (ms)')
-plt.show()
-
-### Dense Graph ###
-dense_runtimes = planar_graphic_linear_comparison(amount_of_nodes, ratio='dense')
-
-plt.plot(amount_of_nodes, sparse_runtimes.planar_runtimes, marker='x') 
-plt.plot(amount_of_nodes, sparse_runtimes.graphic_runtimes, marker='y') 
-plt.plot(amount_of_nodes, sparse_runtimes.linear_runtimes, marker='z') 
-
-plt.title('Sparse Graph / node-edge ratio: 1')
-plt.xlabel('Number of Nodes')
-plt.ylabel('Runtime (ms)')
-plt.show()
+### Uniform - Partition - Gammoid - Linear ###

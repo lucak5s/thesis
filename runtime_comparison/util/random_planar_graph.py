@@ -10,7 +10,7 @@ def add_edge_if_planar(G, u, v):
     return True
 
 def ensure_two_connected(G):
-    for node in list(G.nodes()):
+    for node in G.nodes():
         if G.degree[node] < 2:
             neighbors = list(G.nodes())
             random.shuffle(neighbors)
@@ -25,13 +25,21 @@ def ensure_two_connected(G):
                 return False  
     return True
 
-def random_planar_graph(num_nodes, attempts=1000):
-    attempts = max(num_nodes * 2, attempts)
+def random_planar_graph(num_nodes, density_type='sparse'):
+    if density_type == 'sparse':
+        edge_target = num_nodes  
+    elif density_type == 'semi-dense':
+        edge_target = 2 * num_nodes
+    elif density_type == 'dense':
+        edge_target = 3 * num_nodes - 6 
+
     G = nx.Graph()
     G.add_nodes_from(range(num_nodes))
-    for _ in range(attempts):
+    while G.number_of_edges() < edge_target:
         u, v = random.sample(list(G.nodes()), 2)
-        add_edge_if_planar(G, u, v)
+        if u != v:
+            add_edge_if_planar(G, u, v)
+
     if ensure_two_connected(G):
         return G
     else:
