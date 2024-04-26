@@ -22,7 +22,7 @@ for density in density_types:
 
 ### Uniform - Partition - Gammoid - Linear ###
 
-groundset_sizes = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26]
+groundset_sizes = [10, 12, 14, 16, 18, 20, 22, 24, 30, 40, 50, 60, 70, 80, 90, 100]
 k_ratio = ['low-k', 'mid-k', 'high-k']
 
 for ratio in k_ratio:
@@ -31,10 +31,10 @@ for ratio in k_ratio:
   plt.plot(groundset_sizes, runtimes['uniform_runtimes'], label='Uniform Matroid')
   plt.plot(groundset_sizes, runtimes['partition_runtimes'], label='Partition Matroid')
   plt.plot(groundset_sizes, runtimes['gammoid_runtimes'], label='Gammoid')
-  plt.plot(groundset_sizes, runtimes['linear_runtimes'], label='Linear Matroid')
+  plt.plot([10, 12, 14, 16, 18, 20, 22, 24], runtimes['linear_runtimes'], label='Linear Matroid')
 
-  plt.title(f"Runtimes for {ratio}")
-  plt.xlabel('Size of Groundset')
+  plt.title(f"{ratio.capitalize()} Ratio")
+  plt.xlabel('Size of Ground Set')
   plt.ylabel('Runtime (s)')
   plt.yscale('log')
 

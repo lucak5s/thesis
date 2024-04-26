@@ -31,20 +31,21 @@ def uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio):
     
     # ### Linear Matroid ###
     
-    matrix = uniform_matrix_representation(n, k)
+    if n <= 24:
+      matrix = uniform_matrix_representation(n, k)
 
-    linear_bidders = [Bidder({index: weight}, element) for index, (element, weight) in enumerate(weighted_groundset)]
-    index_element_map = {index: element for index, (element, weight) in enumerate(weighted_groundset)}
-    
-    start_time = time.time()
-    linear_matroid = LinearMatroid(matrix)
-    linear_base = unit_step_auction(linear_matroid, linear_bidders)
-    end_time = time.time()
-    
-    linear_base_in_elements = frozenset([index_element_map[index] for index in linear_base])
-    
-    linear_runtime = end_time - start_time
-    linear_runtimes.append(linear_runtime)
+      linear_bidders = [Bidder({index: weight}, element) for index, (element, weight) in enumerate(weighted_groundset)]
+      index_element_map = {index: element for index, (element, weight) in enumerate(weighted_groundset)}
+      
+      start_time = time.time()
+      linear_matroid = LinearMatroid(matrix)
+      linear_base = unit_step_auction(linear_matroid, linear_bidders)
+      end_time = time.time()
+      
+      linear_base_in_elements = frozenset([index_element_map[index] for index in linear_base])
+      
+      linear_runtime = end_time - start_time
+      linear_runtimes.append(linear_runtime)
 
     # ### Gammoid ###
     
