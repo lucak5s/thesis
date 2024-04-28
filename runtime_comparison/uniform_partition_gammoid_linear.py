@@ -10,28 +10,26 @@ import random
 import time
 from auction.auction import unit_step_auction
 
-def uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio):
+def uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio, linear_matroid_limit):
   linear_runtimes = []
   gammoid_runtimes = []
   partition_runtimes = []
   uniform_runtimes = []
   
   for n in groundset_sizes:
-    ### Random Input ###
-    
     if k_ratio == 'low-k':
-      k = n / 10
+      k = n // 10
     elif k_ratio == 'mid-k':
-      k = n / 2
+      k = n // 2
     else:
-      k = n - 2
+      k = int((n / 10) * 9)
     
     groundset = random_groundset(n)
     weighted_groundset = [(element, random.randint(1, 1000)) for element in groundset]
     
     # ### Linear Matroid ###
     
-    if n <= 24:
+    if n <= linear_matroid_limit:
       matrix = uniform_matrix_representation(n, k)
 
       linear_bidders = [Bidder({index: weight}, element) for index, (element, weight) in enumerate(weighted_groundset)]

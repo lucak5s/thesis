@@ -15,9 +15,6 @@ def planar_graphic_linear_comparison(amounts_of_nodes, density_type):
   planar_runtimes = []
   
   for amount_of_nodes in amounts_of_nodes:
-    
-    ### Random Input ###
-    
     G = random_planar_graph(amount_of_nodes, density_type)
     vertices = frozenset(G.nodes())
     edges = frozenset([frozenset(edge) for edge in G.edges()])
