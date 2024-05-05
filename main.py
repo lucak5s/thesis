@@ -31,7 +31,7 @@ for density in density_types:
 ### Uniform - Partition - Gammoid - Linear ###
 
 groundset_sizes = [10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 36, 40, 42, 50, 60, 70, 80, 90]
-k_ratios = ['high-k']
+k_ratios = ['low-k', 'mid-k', 'high-k']
 k_ratio_title_map = {
   'low-k': r'$k = 0.1n$',
   'mid-k': r'$k = 0.5n$',
