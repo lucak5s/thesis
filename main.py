@@ -26,6 +26,7 @@ for density in density_types:
     plt.title(density_title_map[density], fontstyle='italic')
     plt.legend()
     plt.xlim(min(amounts_of_nodes), max(amounts_of_nodes)) 
+    plt.ylim(bottom=-0.5)
     plt.show()
 
 ### Uniform - Partition - Gammoid - Linear ###
@@ -58,5 +59,5 @@ for ratio in k_ratios:
   plt.title(k_ratio_title_map[ratio], fontstyle='italic')
   plt.legend(loc='upper left')
   plt.xlim(min(groundset_sizes), max(groundset_sizes)) 
-  plt.ylim(-1, max(runtimes['gammoid_runtimes']))
+  plt.ylim(-0.5, max(runtimes['gammoid_runtimes']))
   plt.show()
