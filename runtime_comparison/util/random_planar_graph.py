@@ -39,12 +39,11 @@ def random_planar_graph(num_edges, density_type='sparse'):
     for i in range(node_target):
         G.add_edge(i, (i + 1) % node_target)
 
+    ensure_two_connected(G)
+    
     while G.number_of_edges() < num_edges:
         u, v = random.sample(list(G.nodes()), 2)
         if u != v:
             add_edge_if_planar(G, u, v)
     
-    if not ensure_two_connected(G):
-        return None
-    else:
-        return G
+    return G
