@@ -9,13 +9,13 @@ from auction.auction import unit_step_auction
 from runtime_comparison.util.random_planar_graph import random_planar_graph
 from runtime_comparison.util.vertex_edge_incidence_matrix import vertex_edge_incidence_matrix
 
-def planar_graphic_linear_comparison(amounts_of_nodes, density_type):
+def planar_graphic_linear_comparison(groundset_sizes, density_type):
   linear_runtimes = []
   graphic_runtimes = []
   planar_runtimes = []
   
-  for amount_of_nodes in amounts_of_nodes:
-    G = random_planar_graph(amount_of_nodes, density_type)
+  for groundset_size in groundset_sizes:
+    G = random_planar_graph(groundset_size, density_type)
     vertices = frozenset(G.nodes())
     edges = frozenset([frozenset(edge) for edge in G.edges()])
     weighted_edges = [(edge, random.randint(1, 1000)) for edge in edges]

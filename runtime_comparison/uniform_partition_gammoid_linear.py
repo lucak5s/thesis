@@ -29,7 +29,7 @@ def uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio, linear
     
     # ### Linear Matroid ###
     
-    if n <= linear_matroid_limit:
+    if not linear_matroid_limit or n <= linear_matroid_limit:
       matrix = uniform_matrix_representation(n, k)
 
       linear_bidders = [Bidder({index: weight}, element) for index, (element, weight) in enumerate(weighted_groundset)]

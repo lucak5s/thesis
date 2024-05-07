@@ -25,22 +25,26 @@ def ensure_two_connected(G):
                 return False  
     return True
 
-def random_planar_graph(num_nodes, density_type='sparse'):
+def random_planar_graph(num_edges, density_type='sparse'):
     if density_type == 'sparse':
-        edge_target = num_nodes  
+        node_target = num_edges  
     elif density_type == 'semi-dense':
-        edge_target = 2 * num_nodes
+        node_target = num_edges // 2 + 1
     elif density_type == 'dense':
-        edge_target = 3 * num_nodes - 6 
-
+        node_target = num_edges // 3 + 6
+    
     G = nx.Graph()
-    G.add_nodes_from(range(num_nodes))
-    while G.number_of_edges() < edge_target:
+    G.add_nodes_from(range(node_target))
+    
+    for i in range(node_target):
+        G.add_edge(i, (i + 1) % node_target)
+
+    while G.number_of_edges() < num_edges:
         u, v = random.sample(list(G.nodes()), 2)
         if u != v:
             add_edge_if_planar(G, u, v)
-
-    if ensure_two_connected(G):
-        return G
-    else:
+    
+    if not ensure_two_connected(G):
         return None
+    else:
+        return G
