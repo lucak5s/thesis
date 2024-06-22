@@ -9,8 +9,16 @@ from auction.bidder import Bidder
 import random
 import time
 from auction.auction import unit_step_auction
+import threading
+import signal
+import sys
 
-def uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio, linear_matroid_limit):
+def timeout_handler(signum, frame):
+    raise TimeoutError("Execution exceeded the time limit")
+
+def uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio):
+  linear_timout = False
+  
   linear_runtimes = []
   gammoid_runtimes = []
   partition_runtimes = []
@@ -29,21 +37,32 @@ def uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio, linear
     
     # ### Linear Matroid ###
     
-    if not linear_matroid_limit or n <= linear_matroid_limit:
-      matrix = uniform_matrix_representation(n, k)
+    if not linear_timout:
+      signal.signal(signal.SIGALRM, timeout_handler)
+      signal.alarm(100)
+      
+      try:
+        matrix = uniform_matrix_representation(n, k)
+        
+        linear_bidders = [Bidder({index: weight}, element) for index, (element, weight) in enumerate(weighted_groundset)]
+        index_element_map = {index: element for index, (element, weight) in enumerate(weighted_groundset)}
 
-      linear_bidders = [Bidder({index: weight}, element) for index, (element, weight) in enumerate(weighted_groundset)]
-      index_element_map = {index: element for index, (element, weight) in enumerate(weighted_groundset)}
-      
-      start_time = time.time()
-      linear_matroid = LinearMatroid(matrix)
-      linear_base = unit_step_auction(linear_matroid, linear_bidders)
-      end_time = time.time()
-      
-      linear_base_in_elements = frozenset([index_element_map[index] for index in linear_base])
-      
-      linear_runtime = end_time - start_time
-      linear_runtimes.append(linear_runtime)
+        start_time = time.time()
+        linear_matroid = LinearMatroid(matrix)
+        linear_base = unit_step_auction(linear_matroid, linear_bidders)
+        end_time = time.time()
+        
+        linear_base_in_elements = frozenset([index_element_map[index] for index in linear_base])
+        
+        linear_runtime = end_time - start_time
+        linear_runtimes.append(linear_runtime)
+
+      except TimeoutError as e:
+          print(e)
+          linear_timout = True
+
+      finally:
+          signal.alarm(0)
 
     # ### Gammoid ###
     

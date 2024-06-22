@@ -1,50 +1,52 @@
 from runtime_comparison.planar_graphic_linear import planar_graphic_linear_comparison
 from runtime_comparison.uniform_partition_gammoid_linear import uniform_partition_gammoid_linear_comparison
-import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 16})
+import csv
+import os
+import itertools
 
-def plot_planar_graphic_linear_comparision(groundset_sizes, density_type, plot_title):
-  runtimes = planar_graphic_linear_comparison(groundset_sizes, density_type=density_type)
-    
-  plt.figure(figsize=(5, 8))
-  plt.plot(groundset_sizes, runtimes['planar_runtimes'], label='Planar Matroid', color='black', linewidth=2)
-  plt.plot(groundset_sizes, runtimes['graphic_runtimes'], label='Graphic Matroid', color='green', linewidth=2)
-  plt.plot(groundset_sizes, runtimes['linear_runtimes'], label='Linear Matroid', color='blue', linewidth=2)
+def round_values(data_dict):
+    rounded_dict = {}
+    for key, values in data_dict.items():
+        rounded_dict[key] = [round(value, 3) for value in values]
+    return rounded_dict
   
-  plt.xlabel('Size of Ground Set')
-  plt.ylabel('Runtime (s)')
-  plt.title(plot_title, fontstyle='italic')
-  plt.legend(loc='upper left')
-  plt.xlim(min(groundset_sizes), max(groundset_sizes)) 
-  plt.ylim(0, 60)
-  plt.show()
+  
+def dict_to_csv(data_dict, filename):
+    folder_path = 'results'
+    os.makedirs(folder_path, exist_ok=True)
+    path = os.path.join(folder_path, filename)
+    
+    data_dict = round_values(data_dict)
+    headers = data_dict.keys()
+    rows = itertools.zip_longest(*data_dict.values(), fillvalue=None)
 
-def plot_uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio, plot_title, linear_matroid_limit=None):
-  if not linear_matroid_limit: linear_matroid_limit = groundset_sizes[-1]
-  runtimes = uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio, linear_matroid_limit)
+    with open(path, 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(headers)
+        csvwriter.writerows(rows)
 
-  plt.figure(figsize=(5, 8))
-  plt.plot(groundset_sizes, runtimes['uniform_runtimes'], label='Uniform Matroid', color='red', linewidth=6)
-  plt.plot(groundset_sizes, runtimes['partition_runtimes'], label='Partition Matroid', linestyle=':', color='black', linewidth=6)
-  plt.plot(groundset_sizes, runtimes['gammoid_runtimes'], label='Gammoid', color='green', linewidth=2)
-  plt.plot(groundset_sizes[:groundset_sizes.index(linear_matroid_limit) + 1], runtimes['linear_runtimes'], label='Linear Matroid', color='blue', linewidth=2)
 
-  plt.xlabel('Size of Ground Set')
-  plt.ylabel('Runtime (s)')
-  plt.title(plot_title, fontstyle='italic')
-  plt.legend(loc='upper left')
-  plt.xlim(min(groundset_sizes), max(groundset_sizes)) 
-  plt.ylim(0, 35)
-  plt.show()
+def csv_planar_graphic_linear_comparision(groundset_sizes, density_type, filename):
+  runtimes = planar_graphic_linear_comparison(groundset_sizes, density_type=density_type)
+  runtimes['ground_set_sizes'] = groundset_sizes
+  dict_to_csv(runtimes, filename)
+
+
+def csv_uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio, filename):
+  runtimes = uniform_partition_gammoid_linear_comparison(groundset_sizes, k_ratio)
+  runtimes['ground_set_sizes'] = groundset_sizes
+  runtimes['linear_ground_set_sizes'] = groundset_sizes[:len(runtimes['linear_runtimes'])]
+  dict_to_csv(runtimes, filename)
+
 
 ### Planar - Graphic - Linear ###
 
-plot_planar_graphic_linear_comparision([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250], 'sparse', r'$|V| = |E|$')
-plot_planar_graphic_linear_comparision([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250], 'semi-dense', r'$|V| = |E| / 2$')
-plot_planar_graphic_linear_comparision([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250], 'dense', r'$|V| = |E| / 3 + 6$')
+csv_planar_graphic_linear_comparision([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 190, 240], 'sparse', 'v_e.csv')
+csv_planar_graphic_linear_comparision([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 190, 240], 'semi-dense', 'v_2e.csv')
+csv_planar_graphic_linear_comparision([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 190, 240], 'dense', 'v_3e.csv')
 
 ### Uniform - Partition - Gammoid - Linear ###
 
-plot_uniform_partition_gammoid_linear_comparison([10, 20, 30, 40, 50, 60, 70, 80, 90], 'low-k', r'$k = 0.1n$')
-plot_uniform_partition_gammoid_linear_comparison([10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 36, 40, 42, 50, 60, 70, 80, 90], 'mid-k',  r'$k = 0.5n$', 42)
-plot_uniform_partition_gammoid_linear_comparison([10, 12, 14, 16, 18, 20, 22, 24, 26, 30, 36, 40, 42, 50, 60, 70, 80, 90], 'high-k', r'$k = 0.9n$', 26)
+csv_uniform_partition_gammoid_linear_comparison([10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 60, 70, 80, 90], 'low-k', 'k_01n.csv')
+csv_uniform_partition_gammoid_linear_comparison([10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 60, 70, 80, 90], 'mid-k', 'k_05n.csv')
+csv_uniform_partition_gammoid_linear_comparison([10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 60, 70, 80, 90], 'high-k', 'k_09n.csv')
