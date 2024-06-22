@@ -1,4 +1,4 @@
-# Ascending Vickrey Auctions for Selling Bases of Linear Matroids
+# Tailoring a Matroid-Constrained Ascending Vickrey Auction to Representable Matroids
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
